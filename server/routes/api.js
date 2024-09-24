@@ -1,8 +1,9 @@
 // api.js
-const express = require("express");
-const passport = require("passport");
-const authController = require("./controllers/authController");
-const userController = require("./controllers/userController");
+import express from "express";
+import passport from "passport";
+import authController from "./controllers/authController.js";
+import userController from "./userController.js";
+
 const router = express.Router();
 
 // Auth Routes

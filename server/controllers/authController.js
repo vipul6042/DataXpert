@@ -1,7 +1,7 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { User } = require("../models");
-const nodemailer = require("nodemailer");
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import User from "../models";
+import nodemailer from "nodemailer";
 
 const JWT_SECRET = "your_jwt_secret";
 

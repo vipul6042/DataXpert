@@ -1,4 +1,4 @@
-const pool = require("../config/db");
+import pool from "../config/db";
 
 exports.getUsers = async (req, res) => {
 	try {

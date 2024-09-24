@@ -1,6 +1,7 @@
-const { DataTypes } = require("sequelize");
-const sequelize = require("../config/config");
-const Company = require("./Company");
+import { DataTypes } from "sequelize";
+import sequelize from "../config/config";
+
+import Company from "./Company.js";
 
 const CompanyMetrics = sequelize.define(
 	"CompanyMetrics",
