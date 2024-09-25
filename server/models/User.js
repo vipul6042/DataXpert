@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import { sequelize } from "../config/config";
+import { sequelize } from "../config/db.js";
 
 const User = sequelize.define(
 	"User",
@@ -46,8 +46,9 @@ const User = sequelize.define(
 		},
 	},
 	{
+		tableName: 'User', // Specify the exact table name here
 		timestamps: true,
-	},
+	}
 );
 
-module.exports = User;
+export default User;
