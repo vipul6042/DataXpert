@@ -6,21 +6,21 @@ export default function Home() {
 		<div className="flex flex-col justify-center items-center h-screen gap-[20px]">
 			<h1 className="font-bold text-5xl">DataXpert</h1>
 			<div className="flex gap-10">
-				<Link href="/auth/sign-in">
+				<Link href="/auth/login">
 					<button
 						type="button"
 						className="bg-black text-white rounded-[10px] h-[40px] w-[100px] font-bold"
 					>
-						sign-in
+						login
 					</button>
 				</Link>
 
-				<Link href="/auth/sign-up">
+				<Link href="/auth/register">
 					<button
 						type="button"
 						className="bg-black text-white rounded-[10px] h-[40px] w-[100px] font-bold"
 					>
-						sign-up
+						register
 					</button>
 				</Link>
 			</div>
