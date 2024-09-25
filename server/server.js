@@ -15,8 +15,7 @@ import apiRoutes from "./routes/api.js";
 // app.use(cors());
 // app.use(express.json());
 
-
-// 
+//
 
 // const client = new pg.Client(config);
 // client.connect(function (err) {
@@ -24,7 +23,7 @@ import apiRoutes from "./routes/api.js";
 //         throw err;
 //     client.query("SELECT VERSION()", [], function (err, result) {
 // 		console.log("hello");
-		
+
 //         if (err)
 //             throw err;
 
@@ -48,7 +47,7 @@ import express from "express";
 import cors from "cors";
 import { sequelize } from "./config/db.js"; // Adjust the path as necessary
 import User from "./models/User.js"; // Adjust the path as necessary
-
+import { Company } from "./models/Company.js";
 const app = express();
 const PORT = process.env.PORT || 5000;
 

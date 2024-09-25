@@ -2,6 +2,7 @@
 import express from "express";
 import passport from "passport";
 import { signup,login } from "../controllers/authController.js";
+import { compute } from "../controllers/computeController.js";
 // import userController from "./userController.js";
 
 const router = express.Router();
@@ -24,5 +25,8 @@ router.post("/login", login);
 // User Routes
 // router.get("/users", userController.getUsers);
 // router.post("/users", userController.createUser);
+
+// compute Routes
+router.get("/compute/:code", compute);
 
 export default router;
