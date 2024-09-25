@@ -1,14 +1,14 @@
 // api.js
 import express from "express";
 import passport from "passport";
-import { signup } from "../controllers/authController.js";
+import { signup,login } from "../controllers/authController.js";
 // import userController from "./userController.js";
 
 const router = express.Router();
 
 // Auth Routes
 router.post("/signup", signup);
-// router.post("/login", authController.login);
+router.post("/login", login);
 // router.get(
 // 	"/google",
 // 	passport.authenticate("google", { scope: ["profile", "email"] }),
