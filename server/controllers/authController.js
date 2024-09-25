@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import nodemailer from "nodemailer";
 
-const JWT_SECRET = "your_jwt_secret";
 
 
 // Signup Controller
@@ -14,7 +13,7 @@ export const signup = async (req, res) => {
     if (!username || !email || !password) {
         return res.status(400).json({ message: "All fields are required." });
     }
-
+	
     try {
         // Check if user with the same email or username already exists
         const existingUser = await User.findOne({ where: { email } });
@@ -50,23 +49,25 @@ export const signup = async (req, res) => {
 
 
 // // User Login
-// exports.login = async (req, res) => {
-// 	const { email, password } = req.body;
+export const login = async (req, res) => {
+	const { email, password } = req.body;
 
-// 	try {
-// 		const user = await User.findOne({ where: { email } });
-// 		if (!user || !(await bcrypt.compare(password, user.password))) {
-// 			return res.status(400).json({ error: "Invalid credentials" });
-// 		}
+	try {
+		const user = await User.findOne({ where: { email } });
+		console.log(process.env.JWT_SECRET);
+		
+		if (!user || !(await bcrypt.compare(password, user.password_hash))) {
+			return res.status(400).json({ error: "Invalid credentials" });
+		}
 
-// 		const token = jwt.sign({ userId: user.id }, JWT_SECRET, {
-// 			expiresIn: "1h",
-// 		});
-// 		res.status(200).json({ message: "Login successful", token });
-// 	} catch (error) {
-// 		res.status(500).json({ error: "Error logging in" });
-// 	}
-// };
+		const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
+			expiresIn: "1h",
+		});
+		res.status(200).json({ message: "Login successful", token });
+	} catch (error) {
+		res.status(500).json({ error: "Error logging in" });
+	}
+};
 
 // // Google OAuth Callback
 // exports.googleCallback = (req, res) => {
