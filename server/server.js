@@ -49,7 +49,7 @@ import { sequelize } from "./config/db.js"; // Adjust the path as necessary
 import User from "./models/User.js"; // Adjust the path as necessary
 import { Company } from "./models/Company.js";
 import passport from "./config/passport.js";
-import cookieSession from "cookie-session";
+// import cookieSession from "cookie-session";
 import session from "express-session";
 
 // const GoogleStrategy = require("passport-google-oauth20").Strategy;
