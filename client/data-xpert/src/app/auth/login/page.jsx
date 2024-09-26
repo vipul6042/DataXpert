@@ -4,43 +4,54 @@ import { useFormik } from "formik";
 import { loginSchema } from "@/validation/schemas";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useLoginUserMutation } from "@/lib/services/auth";
 
 const initialValues = {
 	email: "",
 	password: "",
 };
+
 const Login = () => {
 	const [serverErrorMessage, setServerErrorMessage] = useState("");
 	const [serverSuccessMessage, setServerSuccessMessage] = useState("");
 	const [loading, setLoading] = useState(false);
 	const router = useRouter();
-	// const [loginUser] = useLoginUserMutation();
+
 	const { values, errors, handleChange, handleSubmit } = useFormik({
 		initialValues,
 		validationSchema: loginSchema,
 		onSubmit: async (values, action) => {
 			setLoading(true);
 			try {
-				const response = await loginUser(values);
-				if (response.data && response.data.status === "success") {
-					setServerSuccessMessage(response.data.message);
+				const response = await fetch("http://localhost:4000/api/login", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(values),
+				});
+
+				const data = await response.json();
+
+				if (response.ok) {
+					setServerSuccessMessage("Login successful");
 					setServerErrorMessage("");
 					action.resetForm();
+					localStorage.setItem("token", data.token); // Save token if needed
 					setLoading(false);
-					router.push("/user/profile");
-				}
-				if (response.error && response.error.data.status === "failed") {
-					setServerErrorMessage(response.error.data.message);
+					router.push("/"); // Redirect to user profile
+				} else {
+					setServerErrorMessage(data.error || "Invalid credentials");
 					setServerSuccessMessage("");
 					setLoading(false);
 				}
 			} catch (error) {
-				// console.log(error);
+				setServerErrorMessage("Error logging in");
+				setServerSuccessMessage("");
 				setLoading(false);
 			}
 		},
 	});
+
 	return (
 		<div className="flex items-center justify-center h-screen bg-gray-100">
 			<div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
@@ -85,7 +96,7 @@ const Login = () => {
 							href="/account/reset-password-link"
 							className="text-indigo-500 hover:text-indigo-600 transition duration-300 ease-in-out"
 						>
-							Forgot Password ?
+							Forgot Password?
 						</Link>
 					</p>
 					<button
@@ -93,7 +104,7 @@ const Login = () => {
 						className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring focus:ring-indigo-200 focus:ring-opacity-50 disabled:bg-gray-400"
 						disabled={loading}
 					>
-						Login
+						{loading ? "Logging in..." : "Login"}
 					</button>
 				</form>
 				<p className="text-sm text-gray-600 p-1">

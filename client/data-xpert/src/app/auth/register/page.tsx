@@ -3,7 +3,6 @@ import Link from "next/link";
 import { useState } from "react";
 import { useFormik } from "formik";
 import { registerSchema } from "@/validation/schemas";
-import { useCreateUserMutation } from "@/lib/services/auth";
 import { useRouter } from "next/navigation";
 
 const initialValues = {
@@ -18,30 +17,43 @@ const Register = () => {
 	const [serverSuccessMessage, setServerSuccessMessage] = useState("");
 	const [loading, setLoading] = useState(false);
 	const router = useRouter();
-	// const [createUser] = useCreateUserMutation();
+
 	const { values, errors, handleChange, handleSubmit } = useFormik({
 		initialValues,
 		validationSchema: registerSchema,
 		onSubmit: async (values, action) => {
 			setLoading(true);
 			try {
-				// console.log(values);
-				const response = await createUser(values);
-				// console.log(response);
-				if (response.data && response.data.status === "success") {
-					setServerSuccessMessage(response.data.message);
+				// Make the API call to the backend
+				const response = await fetch("http://localhost:4000/api/signup", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						username: values.name,
+						email: values.email,
+						password: values.password,
+					}),
+				});
+
+				const data = await response.json();
+
+				if (response.ok) {
+					// Handle response based on status
+					setServerSuccessMessage(data.message);
 					setServerErrorMessage("");
 					action.resetForm();
 					setLoading(false);
-					router.push("/account/verify-email");
-				}
-				if (response.error && response.error.data.status === "failed") {
-					setServerErrorMessage(response.error.data.message);
+					// Redirect to another page after successful signup
+					router.push("/auth/2fa");
+				} else {
+					setServerErrorMessage(data.message || "Signup failed");
 					setServerSuccessMessage("");
 					setLoading(false);
 				}
 			} catch (error) {
-				// console.log(error);
+				setServerErrorMessage("An error occurred. Please try again.");
 				setLoading(false);
 			}
 		},
@@ -134,7 +146,7 @@ const Register = () => {
 					</button>
 				</form>
 				<p className="text-sm text-gray-600 p-1">
-					Already an User ?{" "}
+					Already an User?{" "}
 					<Link
 						href="/auth/login"
 						className="text-indigo-500 hover:text-indigo-600 transition duration-300 ease-in-out"

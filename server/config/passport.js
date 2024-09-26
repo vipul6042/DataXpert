@@ -1,25 +1,27 @@
 import passport from "passport";
-import User from "../models";
-const GoogleStrategy = require("passport-google-oauth20").Strategy;
+import User from "../models/User.js";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 
 passport.use(
 	new GoogleStrategy(
 		{
-			clientID: "your_google_client_id",
-			clientSecret: "your_google_client_secret",
-			callbackURL: "/auth/google/callback",
+			clientID: process.env.GOOGLE_CLIENT_ID,
+			clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+			callbackURL: "http://localhost:4000/api/google/callback",
 		},
 		async (accessToken, refreshToken, profile, done) => {
 			try {
 				// Check if user exists in the database
-				let user = await User.findOne({ where: { googleId: profile.id } });
+				let user = await User.findOne({
+					where: { email: profile.emails[0].value },
+				});
 
 				// If not, create a new user
 				if (!user) {
 					user = await User.create({
 						username: profile.displayName,
 						email: profile.emails[0].value,
-						googleId: profile.id,
+						password_hash: "123456",
 					});
 				}
 
@@ -43,3 +45,6 @@ passport.deserializeUser(async (id, done) => {
 		done(error, null);
 	}
 });
+
+
+export default passport;
