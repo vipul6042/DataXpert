@@ -1,29 +1,37 @@
 import Image from "next/image";
 import Link from "next/link";
+import SearchBar from "material-ui-search-bar";
+import { Top } from "./home/top";
+// const handleSearch = (e: any): void => {
+//     console.log(e);
+// };
 
-export default function Home() {
-	return (
-		<div className="flex flex-col justify-center items-center h-screen gap-[20px]">
-			<h1 className="font-bold text-5xl">DataXpert</h1>
-			<div className="flex gap-10">
-				<Link href="/auth/login">
-					<button
-						type="button"
-						className="bg-black text-white rounded-[10px] h-[40px] w-[100px] font-bold"
-					>
-						login
-					</button>
-				</Link>
-
-				<Link href="/auth/register">
-					<button
-						type="button"
-						className="bg-black text-white rounded-[10px] h-[40px] w-[100px] font-bold"
-					>
-						register
-					</button>
-				</Link>
-			</div>
-		</div>
-	);
+export default function Home(this: any) {
+  return (
+    <div className="">
+      <div className="text:3.5rem">All things finance,</div>
+      <div>right here.</div>
+      {/* <div><SearchBar
+    value={this.state.value}
+    onChange={(newValue) => this.setState({ value: newValue })}
+    onRequestSearch={() => handleSearch(this.state.value)}
+  /></div> */}
+      <div>
+        top market cap
+        <Top prop="market cap" />
+      </div>
+      <div>
+        top diversity
+        <Top prop="market cap" />
+      </div>
+      <div>
+        top gainer
+        <Top prop="market cap" />
+      </div>
+      <div>
+        top looser
+        <Top prop="market cap" />
+      </div>
+    </div>
+  );
 }
