@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import SearchBar from "material-ui-search-bar";
+import Navbar from "../components/navbar";
+import SearchBar from "@/components/searchbar";
 import { Top } from "./home/top";
 // const handleSearch = (e: any): void => {
 //     console.log(e);
@@ -8,7 +9,9 @@ import { Top } from "./home/top";
 
 export default function Home(this: any) {
   return (
-    <div className="">
+    <div className="h-screen w-[100%]">
+			<Navbar />
+			<SearchBar />
       <div className="text:3.5rem">All things finance,</div>
       <div>right here.</div>
       {/* <div><SearchBar
