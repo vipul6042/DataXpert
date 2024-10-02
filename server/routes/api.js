@@ -7,7 +7,7 @@ import {
 	enable2fa,
 	verify2fa,
 } from "../controllers/authController.js";
-import { compute } from "../controllers/computeController.js";
+import { compute, search } from "../controllers/computeController.js";
 
 // import userController from "./userController.js";
 
@@ -44,5 +44,8 @@ router.post("/verify-2fa", verify2fa);
 
 // compute Routes
 router.get("/compute/:code", compute);
+
+// search route
+router.get("/company/search",search);
 
 export default router;

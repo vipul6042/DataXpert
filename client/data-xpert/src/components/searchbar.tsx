@@ -1,94 +1,106 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, ChangeEvent, useEffect, useRef } from "react";
+import SearchIcon from "@mui/icons-material/Search";
+import axios from "axios";
 
-const SearchBar = () => {
-	const [searchQuery, setSearchQuery] = useState("");
-	const [filteredResults, setFilteredResults] = useState([]);
+// Define types for search results
+interface company {
+  company: string;
+  country: string;
+  market_cap: string;
+}
 
-	const movies = [
-		{ title: "Hello!", type: "TV", year: "2022" },
-		{ title: "Hello", type: "Movie", year: "2022" },
-		{ title: "Hello, Me!", type: "TV", year: "2021" },
-		{ title: "Hello Brother", type: "Movie", year: "2005" },
-		{ title: "Hello, Bookstore", type: "Documentary", year: "2021" },
-	];
+const SearchBar: React.FC = () => {
+  const [searchQuery, setSearchQuery] = useState<string>(""); // Search term
+  const [filteredResults, setFilteredResults] = useState<company[]>([]); // Search results
+  const searchRef=useRef()
+  // Handle search query input change
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+  };
 
-	const handleSearch = (e) => {
-		const query = e.target.value;
-		setSearchQuery(query);
+  // Handle search logic (for fetching API data)
+  const handleSearch = async () => {
+    try {
+      // You can replace this with your actual API endpoint
+      console.log(searchQuery);
+      if (searchQuery.length < 1) {
+        setFilteredResults([]);
+        return;
+      }
+      const response = await axios.get<company[]>(
+        `http://localhost:4000/api/company/search`,
+        {
+          params: { query: searchQuery },
+        }
+      );
+      setFilteredResults(response.data); // Set the API results to the state
+      console.log(filteredResults);
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+    }
+  };
+  useEffect(() => {
+    handleSearch();
+  }, [searchQuery]);
+  // Handle search when the user presses Enter
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleSearch(); // Trigger search when pressing "Enter"
+    }
+  };
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setFilteredResults([]); // Close the search results
+      }
+    };
 
-		if (query) {
-			const results = movies.filter((movie) =>
-				movie.title.toLowerCase().includes(query.toLowerCase()),
-			);
-			setFilteredResults(results);
-		} else {
-			setFilteredResults([]);
-		}
-	};
+    // Attach the click event listener
+    document.addEventListener("mousedown", handleClickOutside);
 
-	return (
-		<div className="p-4 flex flex-col items-center w-full">
-			{/* Search Bar */}
-			<div className="relative w-full max-w-2xl">
-				<input
-					type="text"
-					className="w-full p-4 pl-12 pr-12 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
-					placeholder="Search movies, TV shows, and more..."
-					value={searchQuery}
-					onChange={handleSearch}
-				/>
-				<div className="absolute top-0 left-0 h-full flex items-center pl-4">
-					<svg
-						className="w-6 h-6 text-gray-400"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-						xmlns="http://www.w3.org/2000/svg"
-					>
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							strokeWidth="2"
-							d="M8 11a4 4 0 100-8 4 4 0 000 8zm13 11l-4.35-4.35"
-						/>
-					</svg>
-				</div>
-				<button className="absolute top-0 right-0 mt-2 mr-4 bg-green-500 p-2 rounded-full hover:bg-green-600">
-					<svg
-						className="w-6 h-6 text-white"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-						xmlns="http://www.w3.org/2000/svg"
-					>
-						<path
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							strokeWidth="2"
-							d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2v6m6 4H8a4 4 0 01-4-4V8a4 4 0 014-4h8a4 4 0 014 4v8"
-						/>
-					</svg>
-				</button>
-			</div>
+    // Cleanup the event listener on component unmount
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
-			{/* Results */}
-			{filteredResults.length > 0 && (
-				<div className="mt-4 w-full max-w-2xl bg-white shadow-lg rounded-lg p-4">
-					<ul>
-						{filteredResults.map((result, index) => (
-							<li key={index} className="border-b last:border-0 py-2">
-								<p className="font-semibold">{result.title}</p>
-								<p className="text-sm text-gray-500">
-									{result.year} • {result.type}
-								</p>
-							</li>
-						))}
-					</ul>
-				</div>
-			)}
-		</div>
-	);
+
+  return (
+    <div className="p-4 flex flex-col items-center w-full">
+      {/* Search Bar */}
+      <div className="relative w-full max-w-2xl">
+        <input
+        ref={searchRef} 
+          type="text"
+          className="w-full p-4 pl-12 pr-12 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Search companies"
+          value={searchQuery}
+          onChange={handleInputChange} // Update the search query state
+          onKeyPress={handleKeyPress} // Handle search on "Enter" key press
+        />
+        <div className="absolute top-0 left-0 h-full flex items-center pl-4">
+          <SearchIcon />
+        </div>
+      </div>
+
+      {/* Results */}
+      {filteredResults.length > 0 && (
+        <div ref={searchRef} className="mt-4 w-full max-w-2xl bg-white shadow-lg rounded-lg p-4 z-10 h-64 overflow-y-auto">
+          <ul>
+            {filteredResults.map((result, index) => (
+              <li key={index} className="border-b last:border-0 py-2">
+                <p className="font-semibold">{result.company}</p>
+                <p className="text-sm text-gray-500">
+                  {result.country} • market cap{result.market_cap}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default SearchBar;
