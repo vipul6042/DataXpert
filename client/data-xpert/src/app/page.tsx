@@ -9,33 +9,12 @@ import { Top } from "./home/top";
 
 export default function Home(this: any) {
   return (
-    <div className="h-screen w-[100%]">
-			<Navbar />
-			<HomeMain/>
-    </div>
-  );
 			<div className="h-screen w-[100%]">
 				<Navbar />
+				<HomeMain />
 				<HeroSection />
-				{/* <div className="text:3.5rem">All things finance,</div>
-				<div>right here.</div>
-
-				<div>
-					top market cap
-					<Top prop="market cap" />
-				</div>
-				<div>
-					top diversity
-					<Top prop="market cap" />
-				</div>
-				<div>
-					top gainer
-					<Top prop="market cap" />
-				</div>
-				<div>
-					top looser
-					<Top prop="market cap" />
-				</div> */}
 			</div>
 		);
+
+
 }
