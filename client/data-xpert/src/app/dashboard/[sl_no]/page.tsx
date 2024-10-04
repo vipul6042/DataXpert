@@ -61,39 +61,118 @@ const CompanyDashboard = () => {
 		}
 	}, [sl_no]);
 
-	if (!companyData) {
-		return <p>Loading...</p>;
-	}
+
 
 	return (
 		<div>
 			<Navbar />
 			<div className="flex flex-row">
 				<Sidebar />
-				<div>
-					<h1>{companyData.company}</h1>
-					<p>Status: {status}</p>
-					<p>Message: {message}</p>
-					<p>Country: {companyData.country}</p>
-					<p>Country Code: {companyData.country_code}</p>
-					<p>Market Cap: {companyData.market_cap}</p>
-					<p>Diversity: {companyData.diversity}</p>
+				{!companyData ? (
+					<p>Loading...</p>
+				) : (
+					<div>
+						<h1>{companyData.company}</h1>
+						<p>Status: {status}</p>
+						<p>Message: {message}</p>
+						<p>Country: {companyData.country}</p>
+						<p>Country Code: {companyData.country_code}</p>
+						<p>Market Cap: {companyData.market_cap}</p>
+						<p>Diversity: {companyData.diversity}</p>
 
-					{/* Displaying metrics */}
-					{metrics && (
-						<>
-							<h2>Metrics</h2>
-							<p>
-								Total Companies in Country: {metrics.total_companies_in_country}
-							</p>
-							<p>
-								Greater Diversity Companies in Country:{" "}
-								{metrics.greater_diversity_companies_in_country}
-							</p>
-							{/* Add more metrics display based on the structure */}
-						</>
-					)}
-				</div>
+						{metrics && (
+							<>
+								<h2>Metrics</h2>
+								<p>
+									Total Companies in Country:{" "}
+									{metrics.total_companies_in_country}
+								</p>
+								<p>
+									Greater Diversity Companies in Country:{" "}
+									{metrics.greater_diversity_companies_in_country}
+								</p>
+
+								{/* Yearly Changes */}
+								{metrics.yearly_changes && (
+									<>
+										<h3>Yearly Changes</h3>
+										<ul>
+											{Object.entries(metrics.yearly_changes).map(
+												([category, yearData]) => (
+													<li key={category}>
+														<strong>
+															{category.replace(/_/g, " ").toUpperCase()}:
+														</strong>
+														<ul>
+															{/* Iterate over the years inside each category */}
+															{Object.entries(yearData).map(([year, value]) => (
+																<li key={year}>
+																	{year}: {value}
+																</li>
+															))}
+														</ul>
+													</li>
+												),
+											)}
+										</ul>
+									</>
+								)}
+
+								{/* Domestic Comparisons */}
+								{metrics.domestic_comparisons && (
+									<>
+										<h3>Domestic Comparisons</h3>
+										<ul>
+											{Object.entries(metrics.domestic_comparisons).map(
+												([comparisonType, yearData]) => (
+													<li key={comparisonType}>
+														<strong>
+															{comparisonType.replace(/_/g, " ")}:
+														</strong>
+														<ul>
+															{/* Iterate over the years inside each comparison type */}
+															{Object.entries(yearData).map(([year, value]) => (
+																<li key={year}>
+																	{year}: {value}
+																</li>
+															))}
+														</ul>
+													</li>
+												),
+											)}
+										</ul>
+									</>
+								)}
+
+								{/* Global Comparisons */}
+								{metrics.global_comparisons && (
+									<>
+										<h3>Global Comparisons</h3>
+										<ul>
+											{Object.entries(metrics.global_comparisons).map(
+												([comparisonType, yearData]) => (
+													<li key={comparisonType}>
+														<strong>
+															{comparisonType.replace(/_/g, " ")}:
+														</strong>
+														<ul>
+															{/* Iterate over the years inside each comparison type */}
+															{Object.entries(yearData).map(([year, value]) => (
+																<li key={year}>
+																	{year}: {value}
+																</li>
+															))}
+														</ul>
+													</li>
+												),
+											)}
+										</ul>
+									</>
+								)}
+							</>
+						)}
+					</div>
+				)}
 			</div>
 		</div>
 	);
