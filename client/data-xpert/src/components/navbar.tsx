@@ -7,11 +7,11 @@ const Navbar = () => {
 
 	return (
 		<nav className="bg-white shadow-md">
-			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<div className=" mx-auto px-10 sm:px-6 lg:px-8">
 				<div className="flex justify-between items-center h-16">
 					{/* Logo */}
 					<div className="flex-shrink-0">
-						<a href="/" className="text-2xl font-bold text-black">
+						<a href="/" className="text-2xl font-bold text-black px-[35px]">
 							DataXpert
 						</a>
 					</div>

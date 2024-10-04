@@ -12,7 +12,7 @@ export default function Home(this: any) {
 			<div className="h-screen w-[100%]">
 				<Navbar />
 				<HomeMain />
-				<HeroSection />
+				{/* <HeroSection /> */}
 			</div>
 		);
 
