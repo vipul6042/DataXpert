@@ -1,13 +1,15 @@
 import { Company } from "../models/Company.js";
 import { sequelize } from "../config/db.js";
 import { Op } from "sequelize";
+import { delay } from "../utils/computeUtils.js";
+import { computeYearlyChanges } from "../utils/computeUtils.js";
+import { computeComparisons } from "../utils/computeUtils.js";
 
 export const compute = async (req, res) => {
 	const { code } = req.params;
 	console.log(code);
 
 	try {
-		
 		const companies = await Company.findAll({
 			where: {
 				country_code: code,
@@ -100,23 +102,33 @@ export const getCompanyData = async (req, res) => {
 	}
 };
 
-// Company Metrics API (Refined)
-router.post("/compute-metrics", async (req, res) => {
+export const getComputeMetrics = async (req, res) => {
 	try {
-		const { company_id } = req.body;
+		const { sl_no } = req.query;
 
-		if (!company_id) {
+		// Parse sl_no from the query
+		const sl_no_num = Number.parseFloat(sl_no);
+
+		if (!sl_no) {
+			// Validate sl_no
 			return res
 				.status(400)
-				.json({ status: "error", message: "Company ID is required" });
+				.json({ status: "error", message: "sl_no is required" });
 		}
 
-
+		if (Number.isNaN(sl_no_num)) {
+			return res.status(400).json({ error: "Invalid sl_no parameter" });
+		}
 		const computationStartTime = Date.now();
 
-
-		const company = await Company.findByPk(company_id, {
-			attributes: ["company_id", "company_name", "company_code", "country"],
+		const company = await Company.findByPk(sl_no_num, {
+			attributes: [
+				"company",
+				"country",
+				"country_code",
+				"market_cap",
+				"diversity",
+			],
 		});
 
 		if (!company) {
@@ -125,69 +137,210 @@ router.post("/compute-metrics", async (req, res) => {
 				.json({ status: "error", message: "Company not found" });
 		}
 
-
-		const financialData = await FinancialData.findAll({
-			where: { company_id },
+		const companyData = await Company.findOne({
+			where: { sl_no: sl_no_num },
 			attributes: [
-				"year",
-				"stock_price",
-				"market_share",
-				"revenue",
-				"expenses",
+				"stock_price_2015",
+				"stock_price_2016",
+				"stock_price_2017",
+				"stock_price_2018",
+				"stock_price_2019",
+				"stock_price_2020",
+				"stock_price_2021",
+				"stock_price_2022",
+				"stock_price_2023",
+				"stock_price_2024",
+				"revenue_2015",
+				"revenue_2016",
+				"revenue_2017",
+				"revenue_2018",
+				"revenue_2019",
+				"revenue_2020",
+				"revenue_2021",
+				"revenue_2022",
+				"revenue_2023",
+				"revenue_2024",
+				"expense_2015",
+				"expense_2016",
+				"expense_2017",
+				"expense_2018",
+				"expense_2019",
+				"expense_2020",
+				"expense_2021",
+				"expense_2022",
+				"expense_2023",
+				"expense_2024",
+				"market_share_2015",
+				"market_share_2016",
+				"market_share_2017",
+				"market_share_2018",
+				"market_share_2019",
+				"market_share_2020",
+				"market_share_2021",
+				"market_share_2022",
+				"market_share_2023",
+				"market_share_2024",
 			],
 		});
 
-		const yearlyChanges = computeYearlyChanges(financialData);
+		const financialData = [];
 
+		// Assuming stock prices are available from 2015 to 2024
+		const years = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
+
+		for (const year of years) {
+			const stockPriceField = `stock_price_${year}`;
+			const revenueField = `revenue_${year}`;
+			const expenseField = `expense_${year}`;
+			const marketShareField = `market_share_${year}`;
+
+			financialData.push({
+				year: year.toString(),
+				stock_price: companyData[stockPriceField],
+				revenue: companyData[revenueField],
+				expenses: companyData[expenseField],
+				market_share: companyData[marketShareField],
+			});
+		}
+
+		const yearlyChanges = computeYearlyChanges(financialData);
 
 		const companiesInSameCountry = await Company.count({
 			where: { country: company.country },
 		});
 
+		if (
+			typeof company.diversity !== "number" ||
+			Number.isNaN(company.diversity)
+		) {
+			console.error("Invalid diversity value:", company.diversity);
+			return;
+		}
 
 		const greaterDiversityCompanies = await Company.count({
 			where: {
 				country: company.country,
-				diversity_score: { $gt: company.diversity_score },
+				diversity: {
+					[Op.gt]: company.diversity,
+					[Op.ne]: null,
+				},
 			},
 		});
-
 
 		const competitorsDomestic = await Company.findAll({
 			where: {
 				country: company.country,
-				company_id: { $ne: company_id },
+				sl_no: { [Op.ne]: sl_no_num },
 			},
-			attributes: ["stock_price", "market_share", "revenue", "expenses"],
+			attributes: [
+				"stock_price_2015",
+				"stock_price_2016",
+				"stock_price_2017",
+				"stock_price_2018",
+				"stock_price_2019",
+				"stock_price_2020",
+				"stock_price_2021",
+				"stock_price_2022",
+				"stock_price_2023",
+				"stock_price_2024",
+				"market_share_2015",
+				"market_share_2016",
+				"market_share_2017",
+				"market_share_2018",
+				"market_share_2019",
+				"market_share_2020",
+				"market_share_2021",
+				"market_share_2022",
+				"market_share_2023",
+				"market_share_2024",
+				"revenue_2015",
+				"revenue_2016",
+				"revenue_2017",
+				"revenue_2018",
+				"revenue_2019",
+				"revenue_2020",
+				"revenue_2021",
+				"revenue_2022",
+				"revenue_2023",
+				"revenue_2024",
+				"expense_2015",
+				"expense_2016",
+				"expense_2017",
+				"expense_2018",
+				"expense_2019",
+				"expense_2020",
+				"expense_2021",
+				"expense_2022",
+				"expense_2023",
+				"expense_2024",
+			],
 		});
 
-		const competitorsGlobal = await FinancialData.findAll({
+		const competitorsGlobal = await Company.findAll({
 			where: {
-				company_id: { $ne: company_id },
+				sl_no: { [Op.ne]: sl_no_num },
 			},
-			attributes: ["stock_price", "market_share", "revenue", "expenses"],
+			attributes: [
+				"stock_price_2015",
+				"stock_price_2016",
+				"stock_price_2017",
+				"stock_price_2018",
+				"stock_price_2019",
+				"stock_price_2020",
+				"stock_price_2021",
+				"stock_price_2022",
+				"stock_price_2023",
+				"stock_price_2024",
+				"market_share_2015",
+				"market_share_2016",
+				"market_share_2017",
+				"market_share_2018",
+				"market_share_2019",
+				"market_share_2020",
+				"market_share_2021",
+				"market_share_2022",
+				"market_share_2023",
+				"market_share_2024",
+				"revenue_2015",
+				"revenue_2016",
+				"revenue_2017",
+				"revenue_2018",
+				"revenue_2019",
+				"revenue_2020",
+				"revenue_2021",
+				"revenue_2022",
+				"revenue_2023",
+				"revenue_2024",
+				"expense_2015",
+				"expense_2016",
+				"expense_2017",
+				"expense_2018",
+				"expense_2019",
+				"expense_2020",
+				"expense_2021",
+				"expense_2022",
+				"expense_2023",
+				"expense_2024",
+			],
 		});
 
 		const domesticComparisons = computeComparisons(
 			yearlyChanges,
 			competitorsDomestic,
 		);
+
 		const globalComparisons = computeComparisons(
 			yearlyChanges,
 			competitorsGlobal,
 		);
 
-
 		const computationEndTime = Date.now();
 		const timeTaken = computationEndTime - computationStartTime;
-
 
 		const minResponseTime = 120000;
 		const delayTime = Math.max(minResponseTime - timeTaken, 0);
 
-
 		await delay(delayTime);
-
 
 		const metrics = {
 			total_companies_in_country: companiesInSameCountry,
@@ -196,7 +349,6 @@ router.post("/compute-metrics", async (req, res) => {
 			domestic_comparisons: domesticComparisons,
 			global_comparisons: globalComparisons,
 		};
-
 
 		res.json({
 			status: "success",
@@ -207,4 +359,4 @@ router.post("/compute-metrics", async (req, res) => {
 		console.error("Error computing company metrics:", error);
 		res.status(500).json({ status: "error", message: "Internal server error" });
 	}
-});
+};

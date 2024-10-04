@@ -11,6 +11,7 @@ import {
 	compute,
 	search,
 	getCompanyData,
+	getComputeMetrics
 } from "../controllers/computeController.js";
 
 // import userController from "./userController.js";
@@ -54,5 +55,8 @@ router.get("/company/search",search);
 
 // Company Data
 router.get("/company/:sl_no", getCompanyData);
+
+// Compute Metrics
+router.get("/compute-metrics",getComputeMetrics);
 
 export default router;
