@@ -23,7 +23,7 @@ export const Company = sequelize.define(
 			allowNull: true,
 		},
 		market_cap: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		diversity: {
@@ -31,123 +31,123 @@ export const Company = sequelize.define(
 			allowNull: true,
 		},
 		stock_price_2015: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		stock_price_2016: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		stock_price_2017: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		stock_price_2018: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		stock_price_2019: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		stock_price_2020: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		stock_price_2021: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		stock_price_2022: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		stock_price_2023: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		stock_price_2024: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		expense_2015: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		expense_2016: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		expense_2017: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		expense_2018: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		expense_2019: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		expense_2020: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		expense_2021: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		expense_2022: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		expense_2023: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		expense_2024: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		revenue_2015: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		revenue_2016: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		revenue_2017: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		revenue_2018: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		revenue_2019: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		revenue_2020: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		revenue_2021: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		revenue_2022: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		revenue_2023: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		revenue_2024: {
-			type: DataTypes.STRING,
+			type: DataTypes.DOUBLE,
 			allowNull: true,
 		},
 		market_share_2015: {
