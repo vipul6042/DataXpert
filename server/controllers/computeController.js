@@ -4,6 +4,19 @@ import { Op } from "sequelize";
 import { delay } from "../utils/computeUtils.js";
 import { computeYearlyChanges } from "../utils/computeUtils.js";
 import { computeComparisons } from "../utils/computeUtils.js";
+import redisClient from "redis";
+import { User, History } from "../models/associations.js";
+import redis from "redis";
+
+const client = redis.createClient();
+
+client.on("error", (err) => {
+	console.log("Redis Client Error", err);
+});
+
+// (async () => {
+// 	await client.connect();
+// })();
 
 export const compute = async (req, res) => {
 	const { code } = req.params;
@@ -47,30 +60,6 @@ export const search = async (req, res) => {
 	}
 };
 
-// router.get("/country/:code", async (req, res) => {
-// 	const { code } = req.params;
-
-// 	try {
-// 		// Fetch all companies with the specified country code
-// 		const companies = await Company.findAll({
-// 			where: {
-// 				countryCode: code,
-// 			},
-// 		});
-
-// 		if (companies.length === 0) {
-// 			return res
-// 				.status(404)
-// 				.json({ message: "No companies found for this country code" });
-// 		}
-
-// 		res.json(companies);
-// 	} catch (error) {
-// 		console.error(error);
-// 		res.status(500).json({ error: "Internal Server Error" });
-// 	}
-// });
-
 export const getCompanyData = async (req, res) => {
 	try {
 		const { sl_no } = req.params;
@@ -104,13 +93,12 @@ export const getCompanyData = async (req, res) => {
 
 export const getComputeMetrics = async (req, res) => {
 	try {
-		const { sl_no } = req.query;
+		const { sl_no, user_id } = req.query;
 
-		// Parse sl_no from the query
 		const sl_no_num = Number.parseFloat(sl_no);
+		const user_id_num = Number.parseInt(user_id);
 
 		if (!sl_no) {
-			// Validate sl_no
 			return res
 				.status(400)
 				.json({ status: "error", message: "sl_no is required" });
@@ -119,6 +107,23 @@ export const getComputeMetrics = async (req, res) => {
 		if (Number.isNaN(sl_no_num)) {
 			return res.status(400).json({ error: "Invalid sl_no parameter" });
 		}
+
+
+
+		const historyEntry = await History.findOne({
+			where: { sl_no: sl_no_num, user_id: user_id_num },
+		});
+
+		if (historyEntry) {
+			return res.json({
+				status: "success",
+				company: historyEntry.company_detail,
+				metrics: historyEntry.computation_result,
+				source: "history",
+			});
+		}
+
+
 		const computationStartTime = Date.now();
 
 		const company = await Company.findByPk(sl_no_num, {
@@ -185,7 +190,7 @@ export const getComputeMetrics = async (req, res) => {
 
 		const financialData = [];
 
-		// Assuming stock prices are available from 2015 to 2024
+
 		const years = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
 
 		for (const year of years) {
@@ -202,28 +207,16 @@ export const getComputeMetrics = async (req, res) => {
 				market_share: companyData[marketShareField],
 			});
 		}
-
 		const yearlyChanges = computeYearlyChanges(financialData);
 
 		const companiesInSameCountry = await Company.count({
 			where: { country: company.country },
 		});
 
-		if (
-			typeof company.diversity !== "number" ||
-			Number.isNaN(company.diversity)
-		) {
-			console.error("Invalid diversity value:", company.diversity);
-			return;
-		}
-
 		const greaterDiversityCompanies = await Company.count({
 			where: {
 				country: company.country,
-				diversity: {
-					[Op.gt]: company.diversity,
-					[Op.ne]: null,
-				},
+				diversity: { [Op.gt]: company.diversity, [Op.ne]: null },
 			},
 		});
 
@@ -328,19 +321,10 @@ export const getComputeMetrics = async (req, res) => {
 			yearlyChanges,
 			competitorsDomestic,
 		);
-
 		const globalComparisons = computeComparisons(
 			yearlyChanges,
 			competitorsGlobal,
 		);
-
-		const computationEndTime = Date.now();
-		const timeTaken = computationEndTime - computationStartTime;
-
-		const minResponseTime = 120000;
-		const delayTime = Math.max(minResponseTime - timeTaken, 0);
-
-		await delay(delayTime);
 
 		const metrics = {
 			total_companies_in_country: companiesInSameCountry,
@@ -350,10 +334,28 @@ export const getComputeMetrics = async (req, res) => {
 			global_comparisons: globalComparisons,
 		};
 
+		const computationEndTime = Date.now();
+		const timeTaken = computationEndTime - computationStartTime;
+
+		await History.create({
+			sl_no: sl_no_num,
+			user_id: user_id_num,
+			company_detail: company,
+			computation_result: metrics,
+			createdAt: new Date(),
+			updatedAt: new Date(),
+		});
+
+		const minDelay = 120000;
+		if (timeTaken < minDelay) {
+			await new Promise((resolve) => setTimeout(resolve, minDelay - timeTaken));
+		}
+
 		res.json({
 			status: "success",
 			company,
 			metrics,
+			source: "computed",
 		});
 	} catch (error) {
 		console.error("Error computing company metrics:", error);
