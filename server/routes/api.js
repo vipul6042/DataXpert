@@ -13,6 +13,7 @@ import {
 	getCompanyData,
 	getComputeMetrics
 } from "../controllers/computeController.js";
+import { getUserHistory } from "../controllers/userController.js";
 
 // import userController from "./userController.js";
 
@@ -58,5 +59,8 @@ router.get("/company/:sl_no", getCompanyData);
 
 // Compute Metrics
 router.get("/compute-metrics",getComputeMetrics);
+
+// User Specific History
+router.get("/history",getUserHistory);
 
 export default router;

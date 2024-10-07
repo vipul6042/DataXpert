@@ -36,9 +36,10 @@ const Login = () => {
 					setServerSuccessMessage("Login successful");
 					setServerErrorMessage("");
 					action.resetForm();
-					localStorage.setItem("token", data.token); // Save token if needed
+					localStorage.setItem("token", data.token);
+					localStorage.setItem("user_id", data.userId);
 					setLoading(false);
-					router.push("/"); // Redirect to user profile
+					router.push("/");
 				} else {
 					setServerErrorMessage(data.error || "Invalid credentials");
 					setServerSuccessMessage("");
@@ -53,8 +54,8 @@ const Login = () => {
 	});
 
 	return (
-		<div className="flex items-center justify-center h-screen bg-gray-100">
-			<div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
+		<div className="flex items-center  h-screen bg-gray-100">
+			<div className="w-full max-w-md p-8 h-screen bg-white rounded-lg shadow-lg">
 				<h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
 				<form onSubmit={handleSubmit}>
 					<div className="mb-4">
