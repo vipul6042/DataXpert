@@ -205,34 +205,16 @@ export const getComputeMetrics = async (req, res) => {
 		}
 		const yearlyChanges = computeYearlyChanges(financialData);
 
-		const companiesInSameCountry = await Company.findAll({
+		const companiesInSameCountry = await Company.count({
 			where: { country: company.country },
-			attributes: ["sl_no", "company"],
 		});
 
-		const companiesInSameCountryList = companiesInSameCountry.map(
-			(company) => ({
-				sl_no: company.sl_no,
-				company_name: company.company,
-			}),
-		);
-
-		const greaterDiversityCompanies = await Company.findAll({
+		const greaterDiversityCompanies = await Company.count({
 			where: {
 				country: company.country,
 				diversity: { [Op.gt]: company.diversity, [Op.ne]: null },
 			},
-			attributes: ["sl_no", "company", "diversity", "country"],
 		});
-
-			 const companiesWithGreaterDiversity = greaterDiversityCompanies.map(
-					(company) => ({
-						sl_no: company.sl_no,
-						company: company.company,
-						diversity: company.diversity,
-						country: company.country,
-					}),
-				);
 
 		const competitorsDomestic = await Company.findAll({
 			where: {
@@ -240,8 +222,6 @@ export const getComputeMetrics = async (req, res) => {
 				sl_no: { [Op.ne]: sl_no_num },
 			},
 			attributes: [
-				"sl_no",
-				"company",
 				"stock_price_2015",
 				"stock_price_2016",
 				"stock_price_2017",
@@ -290,8 +270,6 @@ export const getComputeMetrics = async (req, res) => {
 				sl_no: { [Op.ne]: sl_no_num },
 			},
 			attributes: [
-				"sl_no",
-				"company",
 				"stock_price_2015",
 				"stock_price_2016",
 				"stock_price_2017",
@@ -347,14 +325,14 @@ export const getComputeMetrics = async (req, res) => {
 		const computationEndTime = Date.now();
 		const timeTaken = computationEndTime - computationStartTime;
 
-		const minResponseTime = 0;
+		const minResponseTime = 120000;
 		const delayTime = Math.max(minResponseTime - timeTaken, 0);
 
 		await delay(delayTime);
 
 		const metrics = {
-			total_companies_in_country: companiesInSameCountryList,
-			greater_diversity_companies_in_country: companiesWithGreaterDiversity,
+			total_companies_in_country: companiesInSameCountry,
+			greater_diversity_companies_in_country: greaterDiversityCompanies,
 			yearly_changes: yearlyChanges,
 			domestic_comparisons: domesticComparisons,
 			global_comparisons: globalComparisons,
