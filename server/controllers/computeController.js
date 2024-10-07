@@ -380,3 +380,48 @@ export const getComputeMetrics = async (req, res) => {
 		res.status(500).json({ status: "error", message: "Internal server error" });
 	}
 };
+
+export const topMarketCap=async (req,res)=>{
+	try {
+		const companies = await Company.findAll({
+			order: [['market_cap', 'DESC']],
+			limit: 5
+		  });
+		res.json(companies);
+	}catch (error) {
+		res.status(500).json({ error: 'An error occurred while fetching data.' });
+	}
+}
+export const topDiversity=async (req,res)=>{
+	try {
+		const companies = await Company.findAll({
+			order: [['diversity', 'DESC']],
+			limit: 5
+		  });
+		res.json(companies);
+	}catch (error) {
+		res.status(500).json({ error: 'An error occurred while fetching data.' });
+	}
+}
+export const topRevenue=async (req,res)=>{
+	try {
+		const companies = await Company.findAll({
+			order: [['revenue_2024', 'DESC']],
+			limit: 5
+		  });
+		res.json(companies);
+	}catch (error) {
+		res.status(500).json({ error: 'An error occurred while fetching data.' });
+	}
+}
+export const topStock=async (req,res)=>{
+	try {
+		const companies = await Company.findAll({
+			order: [['stock_price_2024', 'DESC']],
+			limit: 5
+		  });
+		res.json(companies);
+	}catch (error) {
+		res.status(500).json({ error: 'An error occurred while fetching data.' });
+	}
+}

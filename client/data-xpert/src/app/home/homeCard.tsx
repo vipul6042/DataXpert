@@ -1,8 +1,9 @@
 import React from "react";
 import CardActionArea from "@mui/material/CardActionArea";
+import { useRouter } from "next/navigation";
 interface HomeCardProps {
   company: string;
-  price: number;
+  price: string;
   change: number;
   logoUrl: string;
 }
@@ -13,10 +14,17 @@ const HomeCard: React.FC<HomeCardProps> = ({
   change,
   logoUrl,
 }) => {
-  const isNegative = change < 0;
+  // const isNegative = change < 0;
+console.log(price);
+const router = useRouter();
+const handleResultClick = (sl_no) => {
+  console.log(sl_no);
+  const userId = localStorage.getItem("user_id");
+  router.push(`/dashboard/${userId}/${sl_no}`);
+};
 
   return (
-    <div className="border rounded-lg  w-40 text-center shadow-md m-5">
+    <div onClick={() => handleResultClick(change)} className="border rounded-lg  w-40 text-center shadow-md m-5">
       <CardActionArea className="p-4">
         <div className="mb-2">
           <img
@@ -26,14 +34,12 @@ const HomeCard: React.FC<HomeCardProps> = ({
           />
         </div>
         <div className="text-lg font-semibold">{company}</div>
-        <div className="text-xl font-bold mt-2">₹{price.toFixed(2)}</div>
+        <div className="text-xl font-bold mt-2">{price}</div>
         <div
-          className={`text-sm mt-1 ${
-            isNegative ? "text-red-600" : "text-green-600"
-          }`}
+          className={`text-sm mt-1 `}
         >
-          {isNegative ? "" : "+"}
-          {change.toFixed(2)} ({((change / price) * 100).toFixed(2)}%)
+          {/* {isNegative ? "" : "+"} */}
+          {/* {change} */}
         </div>
       </CardActionArea>
     </div>

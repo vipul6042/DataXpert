@@ -17,7 +17,7 @@ const HomeMain: React.FC = () => {
 
       <div className="mt-6">
         <div className="text-xl font-semibold">Top market cap</div>
-        <Top prop="market cap" />
+        <Top prop="market_cap" />
       </div>
 
       <div className="mt-4">
@@ -26,13 +26,13 @@ const HomeMain: React.FC = () => {
       </div>
 
       <div className="mt-4">
-        <div className="text-xl font-semibold">Top gainer</div>
-        <Top prop="gainer" />
+        <div className="text-xl font-semibold">Top Stocks </div>
+        <Top prop="stock_price_2024" />
       </div>
 
       <div className="mt-4">
-        <div className="text-xl font-semibold">Top looser</div>
-        <Top prop="looser" />
+        <div className="text-xl font-semibold">Top Revenue</div>
+        <Top prop="revenue_2024" />
       </div>
     </div>
   );

@@ -11,7 +11,11 @@ import {
 	compute,
 	search,
 	getCompanyData,
-	getComputeMetrics
+	getComputeMetrics,
+	topMarketCap,
+	topDiversity,
+	topStock,
+	topRevenue
 } from "../controllers/computeController.js";
 import { getUserHistory } from "../controllers/userController.js";
 
@@ -62,5 +66,12 @@ router.get("/compute-metrics",getComputeMetrics);
 
 // User Specific History
 router.get("/history",getUserHistory);
+
+// top routes
+
+router.get("/top/market_cap",topMarketCap);
+router.get("/top/diversity",topDiversity);
+router.get("/top/stock_price_2024",topStock);
+router.get("/top/revenue_2024",topRevenue)
 
 export default router;
