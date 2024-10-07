@@ -10,7 +10,8 @@ import PriceChangeIcon from "@mui/icons-material/PriceChange";
 import Diversity3OutlinedIcon from "@mui/icons-material/Diversity3Outlined";
 import CompanyCard from "@/components/companyCard";
 import ConversionRateCard from "@/components/comparisionCard";
-import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
+import MilitaryTechIcon from "@mui/icons-material/MilitaryTech";
+
 interface CompanyData {
   company: string;
   country: string;
@@ -41,11 +42,88 @@ const CompanyDashboard = () => {
   const [metrics, setMetrics] = useState<Metrics | null>(null);
   const [status, setStatus] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState("yearlyChanges");
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case "yearlyChanges":
+        return (
+          <div>
+            {metrics.yearly_changes && (
+              <>
+                <h3>Yearly Changes</h3>
+                <ul>
+                  {Object.entries(metrics.yearly_changes).map(
+                    ([category, yearData]) => (
+                      <li key={category}>
+                        <strong>
+                          {category.replace(/_/g, " ").toUpperCase()}:
+                        </strong>
+                        <ul>
+                          <Chart data={yearData} />
+                        </ul>
+                      </li>
+                    )
+                  )}
+                </ul>
+              </>
+            )}
+          </div>
+        );
+      case "domesticComparison":
+        return (
+          <div>
+            {metrics.domestic_comparisons && (
+              <>
+                <h3>Domestic Comparisons</h3>
+                <ul>
+                  {Object.entries(metrics.domestic_comparisons).map(
+                    ([comparisonType, yearData]) => (
+                      <li key={comparisonType}>
+                        <strong>{comparisonType.replace(/_/g, " ")}:</strong>
+                        <ul>
+                          <Chart data={yearData} />
+                        </ul>
+                      </li>
+                    )
+                  )}
+                </ul>
+              </>
+            )}
+          </div>
+        );
+      case "globalComparison":
+        return (
+          <div>
+            {metrics.global_comparisons && (
+              <>
+                <h3>Global Comparisons</h3>
+                <ul>
+                  {Object.entries(metrics.global_comparisons).map(
+                    ([comparisonType, yearData]) => (
+                      <li key={comparisonType}>
+                        <strong>{comparisonType.replace(/_/g, " ")}:</strong>
+                        <ul>
+                          <Chart data={yearData} />
+                        </ul>
+                      </li>
+                    )
+                  )}
+                </ul>
+              </>
+            )}
+          </div>
+        );
+      default:
+        return <div>Select a tab</div>;
+    }
+  };
+
   const formattedMarketCap = (amount: number) => {
     if (amount > 1e9) {
-      return (amount / 1e9).toFixed(2) + "B"; // Formats to billion with 2 decimal places
+      return "$" + (amount / 1e9).toFixed(2) + "B"; // Formats to billion with 2 decimal places
     }
-    return (amount / 1e6).toFixed(2) + "M"; // Formats to million with 2 decimal places
+    return "$" + (amount / 1e6).toFixed(2) + "M"; // Formats to million with 2 decimal places
   };
   useEffect(() => {
     if (user_id && sl_no) {
@@ -82,97 +160,92 @@ const CompanyDashboard = () => {
           <p>Loading...</p>
         ) : (
           <div className="scroll-auto h-dvh overflow-auto w-dvw p-4">
-			<div className="flex flex-row">
-			<div className="flex flex-col">
-            <CompanyCard
-              logourl={`https://ui-avatars.com/api/?name=${companyData.company}&size=200&background=random&color=random`}
-              companyName={companyData.company}
-              country={companyData.country}
-            />
             <div className="flex flex-row">
-              <Card
-                IconComponent={PriceChangeIcon}
-                Item={"Market Cap"}
-                value={"$"+formattedMarketCap(companyData.market_cap)}
-              />
-              <Card
-                IconComponent={Diversity3OutlinedIcon}
-                Item={"Diversity"}
-                value={companyData.diversity}
+              <div className="flex flex-col">
+                <CompanyCard
+                  logourl={`https://ui-avatars.com/api/?name=${companyData.company}&size=200&background=random&color=random`}
+                  companyName={companyData.company}
+                  country={companyData.country}
+                />
+                <div className="flex flex-row">
+                  <Card
+                    IconComponent={PriceChangeIcon}
+                    Item={"Market Cap"}
+                    value={formattedMarketCap(companyData.market_cap)}
+                  />
+                  <Card
+                    IconComponent={Diversity3OutlinedIcon}
+                    Item={"Diversity"}
+                    value={companyData.diversity}
+                  />
+                </div>
+              </div>
+              <ConversionRateCard
+                stock={{
+                  2024: metrics?.yearly_changes?.stock_price?.[2024],
+                  2023: metrics?.yearly_changes?.stock_price?.[2023],
+                }}
+                expenses={{
+                  2024: metrics?.yearly_changes?.expenses?.[2024],
+                  2023: metrics?.yearly_changes?.expenses?.[2023],
+                }}
+                revenue={{
+                  2024: metrics?.yearly_changes?.revenue?.[2024],
+                  2023: metrics?.yearly_changes?.revenue?.[2023],
+                }}
+                marketShare={{
+                  2024: metrics?.yearly_changes?.market_share?.[2024],
+                  2023: metrics?.yearly_changes?.market_share?.[2023],
+                }}
               />
             </div>
-			</div>
-            <ConversionRateCard />
-			</div>
             {metrics && (
               <>
                 <h2 className="text-3xl font-serif font-bold">Metrics</h2>
-				<Card IconComponent={MilitaryTechIcon} Item={"Companies in Country"} value={metrics.total_companies_in_country}/>
-				<Card IconComponent={MilitaryTechIcon} Item={"Diversity Rank(domestic)"} value={metrics.greater_diversity_companies_in_country}/>
-                
+                <Card
+                  IconComponent={MilitaryTechIcon}
+                  Item={"Companies in Country"}
+                  value={metrics.total_companies_in_country}
+                />
+                <Card
+                  IconComponent={MilitaryTechIcon}
+                  Item={"Diversity Rank(domestic)"}
+                  value={metrics.greater_diversity_companies_in_country}
+                />
 
-                {/* Yearly Changes */}
-                {metrics.yearly_changes && (
-                  <>
-                    <h3>Yearly Changes</h3>
-                    <ul>
-                      {Object.entries(metrics.yearly_changes).map(
-                        ([category, yearData]) => (
-                          <li key={category}>
-                            <strong>
-                              {category.replace(/_/g, " ").toUpperCase()}:
-                            </strong>
-                            <ul>
-                              <Chart data={yearData} />
-                            </ul>
-                          </li>
-                        )
-                      )}
-                    </ul>
-                  </>
-                )}
-
-                {/* Domestic Comparisons */}
-                {metrics.domestic_comparisons && (
-                  <>
-                    <h3>Domestic Comparisons</h3>
-                    <ul>
-                      {Object.entries(metrics.domestic_comparisons).map(
-                        ([comparisonType, yearData]) => (
-                          <li key={comparisonType}>
-                            <strong>
-                              {comparisonType.replace(/_/g, " ")}:
-                            </strong>
-                            <ul>
-                              <Chart data={yearData} />
-                            </ul>
-                          </li>
-                        )
-                      )}
-                    </ul>
-                  </>
-                )}
-
-                {/* Global Comparisons */}
-                {metrics.global_comparisons && (
-                  <>
-                    <h3>Global Comparisons</h3>
-                    <ul>
-                      {Object.entries(metrics.global_comparisons).map(
-                        ([comparisonType, yearData]) => (
-                          <li key={comparisonType}>
-                            <strong>
-                              {comparisonType.replace(/_/g, " ")}:
-                            </strong>
-                            <ul>
-                              <Chart data={yearData} />
-                            </ul>
-                          </li>
-                        )
-                      )}
-                    </ul>
-                  </>
-                )}
+                <div className="flex space-x-4 mb-4">
+                  <button
+                    className={`px-4 py-2 ${
+                      activeTab === "yearlyChanges"
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-200 text-black"
+                    }`}
+                    onClick={() => setActiveTab("yearlyChanges")}
+                  >
+                    Yearly Changes
+                  </button>
+                  <button
+                    className={`px-4 py-2 ${
+                      activeTab === "domesticComparison"
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-200 text-black"
+                    }`}
+                    onClick={() => setActiveTab("domesticComparison")}
+                  >
+                    Domestic Comparison
+                  </button>
+                  <button
+                    className={`px-4 py-2 ${
+                      activeTab === "globalComparison"
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-200 text-black"
+                    }`}
+                    onClick={() => setActiveTab("globalComparison")}
+                  >
+                    Global Comparison
+                  </button>
+                </div>
+                <div className="p-4 border rounded-lg">{renderContent()}</div>
               </>
             )}
           </div>
