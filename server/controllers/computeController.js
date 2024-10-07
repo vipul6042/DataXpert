@@ -93,7 +93,7 @@ export const getCompanyData = async (req, res) => {
 
 export const getComputeMetrics = async (req, res) => {
 	try {
-		const { sl_no, user_id } = req.query;
+		const { user_id, sl_no } = req.query;
 
 		const sl_no_num = Number.parseFloat(sl_no);
 		const user_id_num = Number.parseInt(user_id);
@@ -108,8 +108,6 @@ export const getComputeMetrics = async (req, res) => {
 			return res.status(400).json({ error: "Invalid sl_no parameter" });
 		}
 
-
-
 		const historyEntry = await History.findOne({
 			where: { sl_no: sl_no_num, user_id: user_id_num },
 		});
@@ -122,7 +120,6 @@ export const getComputeMetrics = async (req, res) => {
 				source: "history",
 			});
 		}
-
 
 		const computationStartTime = Date.now();
 
@@ -189,7 +186,6 @@ export const getComputeMetrics = async (req, res) => {
 		});
 
 		const financialData = [];
-
 
 		const years = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
 
@@ -326,6 +322,14 @@ export const getComputeMetrics = async (req, res) => {
 			competitorsGlobal,
 		);
 
+		const computationEndTime = Date.now();
+		const timeTaken = computationEndTime - computationStartTime;
+
+		const minResponseTime = 120000;
+		const delayTime = Math.max(minResponseTime - timeTaken, 0);
+
+		await delay(delayTime);
+
 		const metrics = {
 			total_companies_in_country: companiesInSameCountry,
 			greater_diversity_companies_in_country: greaterDiversityCompanies,
@@ -333,9 +337,6 @@ export const getComputeMetrics = async (req, res) => {
 			domestic_comparisons: domesticComparisons,
 			global_comparisons: globalComparisons,
 		};
-
-		const computationEndTime = Date.now();
-		const timeTaken = computationEndTime - computationStartTime;
 
 		await History.create({
 			sl_no: sl_no_num,
@@ -345,11 +346,6 @@ export const getComputeMetrics = async (req, res) => {
 			createdAt: new Date(),
 			updatedAt: new Date(),
 		});
-
-		const minDelay = 120000;
-		if (timeTaken < minDelay) {
-			await new Promise((resolve) => setTimeout(resolve, minDelay - timeTaken));
-		}
 
 		res.json({
 			status: "success",

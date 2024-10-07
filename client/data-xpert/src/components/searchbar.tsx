@@ -75,8 +75,8 @@ const SearchBar: React.FC = () => {
 
 	const handleResultClick = (result: company) => {
 		console.log(result.sl_no);
-
-		router.push(`/dashboard/${result.sl_no}`);
+		const userId = localStorage.getItem("user_id");
+		router.push(`/dashboard/${userId}/${result.sl_no}`);
 	};
 
 	return (

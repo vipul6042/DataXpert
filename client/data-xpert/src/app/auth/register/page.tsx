@@ -5,6 +5,8 @@ import { useFormik } from "formik";
 import { registerSchema } from "@/validation/schemas";
 import { useRouter } from "next/navigation";
 
+import Image from "next/image";
+
 const initialValues = {
 	name: "",
 	email: "",
@@ -60,8 +62,8 @@ const Register = () => {
 	});
 
 	return (
-		<div className="flex items-center justify-center h-screen bg-gray-100">
-			<div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
+		<div className="flex items-center  h-screen bg-gray-100">
+			<div className="w-full max-w-md p-8 h-screen bg-white rounded-lg shadow-lg">
 				<h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
 				<form onSubmit={handleSubmit}>
 					<div className="mb-4">
@@ -139,7 +141,7 @@ const Register = () => {
 					</div>
 					<button
 						type="submit"
-						className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2 disabled:bg-gray-400"
+						className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2 disabled:bg-gray-400"
 						disabled={loading}
 					>
 						Register
@@ -164,6 +166,14 @@ const Register = () => {
 						{serverErrorMessage}
 					</div>
 				)}
+			</div>
+			<div className="h-screen flex justify-center items-center w-full bg-blue-100">
+				<Image
+					src="/authBanner.png"
+					alt="auth banner"
+					height={700}
+					width={700}
+				/>
 			</div>
 		</div>
 	);
