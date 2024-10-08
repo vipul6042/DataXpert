@@ -2,50 +2,48 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { AccountCircle } from '@mui/icons-material'; // Material UI profile icon
-import { IconButton } from '@mui/material';
+import { AccountCircle } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false); // To handle dropdown visibility
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const user = localStorage.getItem("user_id");
   useEffect(() => {
-    // Check if user is logged in (by checking token or user data in localStorage)
-    
     if (user) {
       setIsLoggedIn(true);
     }
   }, []);
 
   const handleLogout = () => {
-    // Clear localStorage and update state
     localStorage.removeItem("user_id");
     setIsLoggedIn(false);
-    setDropdownOpen(false); // Close dropdown after logout
+    setDropdownOpen(false);
   };
 
   return (
     <nav className="bg-white shadow-md">
       <div className=" mx-auto px-10 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
           <div className="flex-shrink-0">
             <a href="/" className="text-2xl font-bold text-black px-[35px]">
               DataXpert
             </a>
           </div>
 
-          {/* Desktop Menu */}
           <div className="hidden md:flex space-x-6">
             <a href="/" className="text-gray-700 hover:text-blue-500">
               Home
             </a>
-            {isLoggedIn?(
-				<a href={`/history/${user}`} className="text-gray-700 hover:text-blue-500">
-				History
-			  </a>
-			):null}
+            {isLoggedIn ? (
+              <a
+                href={`/history/${user}`}
+                className="text-gray-700 hover:text-blue-500"
+              >
+                History
+              </a>
+            ) : null}
             <a href="#downloads" className="text-gray-700 hover:text-blue-500">
               Profile
             </a>
@@ -68,13 +66,6 @@ const Navbar = () => {
               {/* Dropdown */}
               {dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-lg shadow-lg py-2">
-                  {/* <Link
-                    to="/profile"
-                    className="block px-4 py-2 hover:bg-gray-100"
-                    onClick={() => setDropdownOpen(false)}
-                  >
-                    Profile
-                  </Link> */}
                   <button
                     onClick={handleLogout}
                     className="block w-full text-left px-4 py-2 hover:bg-gray-100"

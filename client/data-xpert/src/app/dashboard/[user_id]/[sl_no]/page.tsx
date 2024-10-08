@@ -2,7 +2,6 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-// import Sidebar from "@/components/sidebar";
 import Navbar from "@/components/navbar";
 import Chart from "@/components/graph";
 import Card from "@/components/singlecard";
@@ -23,7 +22,7 @@ interface CompanyData {
 interface Metrics {
   total_companies_in_country: number;
   greater_diversity_companies_in_country: number;
-  yearly_changes: object; // You can refine this based on your structure
+  yearly_changes: object;
   domestic_comparisons: object;
   global_comparisons: object;
 }
@@ -40,8 +39,6 @@ const CompanyDashboard = () => {
 
   const [companyData, setCompanyData] = useState<CompanyData | null>(null);
   const [metrics, setMetrics] = useState<Metrics | null>(null);
-  const [status, setStatus] = useState<string | null>(null);
-  const [message, setMessage] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("yearlyChanges");
 
   const renderContent = () => {

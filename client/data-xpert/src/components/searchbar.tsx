@@ -3,7 +3,6 @@ import type React from "react";
 import { useState, type ChangeEvent, useEffect, useRef } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
-// import { useRouter } from "next/router";
 import { useRouter } from "next/navigation";
 
 // Define types for search results
@@ -15,8 +14,8 @@ interface company {
 }
 
 const SearchBar: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState<string>(""); // Search term
-  const [filteredResults, setFilteredResults] = useState<company[]>([]); // Search results
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [filteredResults, setFilteredResults] = useState<company[]>([]);
   const searchRef = useRef();
   const router = useRouter();
   // Handle search query input change
@@ -24,11 +23,9 @@ const SearchBar: React.FC = () => {
     setSearchQuery(event.target.value);
   };
   const BASE_API = process.env.NEXT_PUBLIC_API;
-  // Handle search logic (for fetching API data)
+
   const handleSearch = async () => {
     try {
-      // You can replace this with your actual API endpoint
-    //   console.log(searchQuery);
       if (searchQuery.length < 1) {
         setFilteredResults([]);
         return;
@@ -39,8 +36,7 @@ const SearchBar: React.FC = () => {
           params: { query: searchQuery },
         }
       );
-      setFilteredResults(response.data); // Set the API results to the state
-    //   console.log(filteredResults);
+      setFilteredResults(response.data);
     } catch (error) {
       console.error("Error fetching search results:", error);
     }

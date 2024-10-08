@@ -4,139 +4,134 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-
 const Enable2FA = () => {
-	const [qrCode, setQrCode] = useState("");
-	const [secretKey, setSecretKey] = useState("NJ1& JKHUI LD21 NF42");
-	const [verificationCode, setVerificationCode] = useState([
-		"",
-		"",
-		"",
-		"",
-		"",
-		"",
-	]);
+  const [qrCode, setQrCode] = useState("");
+  const [secretKey, setSecretKey] = useState("NJ1& JKHUI LD21 NF42");
+  const [verificationCode, setVerificationCode] = useState([
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+  ]);
 
-	const router = useRouter();
-const BASE_API = process.env.NEXT_PUBLIC_API;
-	const fetchQrCode = async () => {
-		try {
-			const response = await fetch(`${BASE_API}+/api/enable-2fa`, {
-				method: "GET",
-				// headers: {
-				// 	"Content-Type": "application/json",
-				// },
-				// credentials: "include", // Include cookies if your session is cookie-based
-			});
+  const router = useRouter();
+  const BASE_API = process.env.NEXT_PUBLIC_API;
+  const fetchQrCode = async () => {
+    try {
+      const response = await fetch(`${BASE_API}+/api/enable-2fa`, {
+        method: "GET",
+      });
 
-			const data = await response.json();
-			if (response.ok) {
-				setQrCode(data.qrCode);
-				setSecretKey(data.secret);
-			} else {
-				console.error("Error enabling 2FA:", data.error);
-			}
-		} catch (error) {
-			console.error("Error during API call", error);
-		}
-	};
+      const data = await response.json();
+      if (response.ok) {
+        setQrCode(data.qrCode);
+        setSecretKey(data.secret);
+      } else {
+        console.error("Error enabling 2FA:", data.error);
+      }
+    } catch (error) {
+      console.error("Error during API call", error);
+    }
+  };
 
-	useEffect(() => {
-		fetchQrCode();
-	}, []);
-	const handleInputChange = (e, index) => {
-		const newCode = [...verificationCode];
-		newCode[index] = e.target.value;
-		setVerificationCode(newCode);
-	};
+  useEffect(() => {
+    fetchQrCode();
+  }, []);
+  const handleInputChange = (e, index) => {
+    const newCode = [...verificationCode];
+    newCode[index] = e.target.value;
+    setVerificationCode(newCode);
+  };
 
-	const handleSubmit = async () => {
-		console.log("Entered verification code:", verificationCode.join(""));
-	};
+  const handleSubmit = async () => {
+    console.log("Entered verification code:", verificationCode.join(""));
+  };
 
-	return (
-		<div className="flex items-center justify-center h-screen bg-gray-100">
-			<div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
-				<h2 className="text-2xl font-bold mb-6 text-center">Enable 2FA</h2>
+  return (
+    <div className="flex items-center justify-center h-screen bg-gray-100">
+      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
+        <h2 className="text-2xl font-bold mb-6 text-center">Enable 2FA</h2>
 
-				<ol className="list-decimal text-sm text-gray-700 mb-6">
-					<li>
-						You will need an authenticator mobile app to complete this process,
-						such as one of the following:
-						<ul className="list-disc ml-6 mt-2">
-							<li>
-								<Link href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">
-									Google Authenticator
-								</Link>
-							</li>
-							<li>
-								<Link href="https://www.microsoft.com/en-us/security/mobile-authenticator-app">
-									Microsoft Authenticator
-								</Link>
-							</li>
-							<li>
-								<Link href="https://play.google.com/store/apps/details?id=com.duosecurity.duomobile">
-									Duo Mobile
-								</Link>
-							</li>
-						</ul>
-					</li>
+        <ol className="list-decimal text-sm text-gray-700 mb-6">
+          <li>
+            You will need an authenticator mobile app to complete this process,
+            such as one of the following:
+            <ul className="list-disc ml-6 mt-2">
+              <li>
+                <Link href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">
+                  Google Authenticator
+                </Link>
+              </li>
+              <li>
+                <Link href="https://www.microsoft.com/en-us/security/mobile-authenticator-app">
+                  Microsoft Authenticator
+                </Link>
+              </li>
+              <li>
+                <Link href="https://play.google.com/store/apps/details?id=com.duosecurity.duomobile">
+                  Duo Mobile
+                </Link>
+              </li>
+            </ul>
+          </li>
 
-					<li className="mt-4">
-						Scan the QR code with your authenticator:
-						<div className="mt-2 flex justify-center">
-							{qrCode && (
-								<Image
-									src={qrCode}
-									alt="QR Code"
-									width={150}
-									height={150}
-									className="border border-gray-300"
-								/>
-							)}
-						</div>
-						<div className="mt-2 text-sm text-gray-600">
-							If you can't scan the code, use this secret key in your app:
-							<div className="mt-2 bg-gray-100 p-2 border rounded-md">
-								{secretKey}
-							</div>
-						</div>
-					</li>
+          <li className="mt-4">
+            Scan the QR code with your authenticator:
+            <div className="mt-2 flex justify-center">
+              {qrCode && (
+                <Image
+                  src={qrCode}
+                  alt="QR Code"
+                  width={150}
+                  height={150}
+                  className="border border-gray-300"
+                />
+              )}
+            </div>
+            <div className="mt-2 text-sm text-gray-600">
+              If you can't scan the code, use this secret key in your app:
+              <div className="mt-2 bg-gray-100 p-2 border rounded-md">
+                {secretKey}
+              </div>
+            </div>
+          </li>
 
-					<li className="mt-4">
-						Enter the six-digit code generated by your authenticator:
-						<div className="mt-2 grid grid-cols-6 gap-2">
-							{verificationCode.map((digit, index) => (
-								<input
-									key={index}
-									type="text"
-									maxLength={1}
-									value={digit}
-									onChange={(e) => handleInputChange(e, index)}
-									className="w-full h-10 border border-gray-300 rounded-md text-center text-lg focus:ring-indigo-500 focus:border-indigo-500"
-								/>
-							))}
-						</div>
-					</li>
-				</ol>
+          <li className="mt-4">
+            Enter the six-digit code generated by your authenticator:
+            <div className="mt-2 grid grid-cols-6 gap-2">
+              {verificationCode.map((digit, index) => (
+                <input
+                  key={index}
+                  type="text"
+                  maxLength={1}
+                  value={digit}
+                  onChange={(e) => handleInputChange(e, index)}
+                  className="w-full h-10 border border-gray-300 rounded-md text-center text-lg focus:ring-indigo-500 focus:border-indigo-500"
+                />
+              ))}
+            </div>
+          </li>
+        </ol>
 
-				<div className="flex justify-between mt-6">
-					<button
-						onClick={() => router.push("/")}
-						className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-md"
-					>
-						Cancel
-					</button>
-					<button
-						onClick={handleSubmit}
-						className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md"
-					>
-						Verify now
-					</button>
-				</div>
-			</div>
-		</div>
-	);
+        <div className="flex justify-between mt-6">
+          <button
+            onClick={() => router.push("/")}
+            className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-md"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleSubmit}
+            className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md"
+          >
+            Verify now
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Enable2FA;
