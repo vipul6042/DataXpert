@@ -6,11 +6,19 @@ import HomeCard from "./homeCard";
 interface TopProps {
   prop: string;
 }
+interface Company{
+	company:string,
+	sl_no:number,
+	market_cap:number,
+	revenue_2024:number,
+	stock_price_2024:number,
+	diversity:number
+}
 
 export const Top: React.FC<TopProps> = ({ prop }) => {
-  const [companies, setCompanies] = useState<any[]>([]);
+  const [companies, setCompanies] = useState<Company[]>([]);
 
-  const formattedMarketCap = (company:any) => {
+  const formattedMarketCap = (company:Company) => {
     let amount = company.revenue_2024;
     if (prop === "market_cap") amount = company.market_cap;
     else if (prop === "stock_price_2024") amount = company.stock_price_2024;
