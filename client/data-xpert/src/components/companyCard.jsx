@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 import countries from "i18n-iso-countries";
-import en from "i18n-iso-countries/langs/en.json"; // Import English language
+import en from "i18n-iso-countries/langs/en.json";
 
-countries.registerLocale(en); // Register the language
+countries.registerLocale(en);
 
 const getCountryCode = (country) => {
   const countryCode = countries.getAlpha2Code(country, "en");

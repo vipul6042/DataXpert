@@ -1,13 +1,12 @@
 "use client";
 import type React from "react";
-import { useState, type ChangeEvent, useEffect, useRef } from "react";
+import { useState, ChangeEvent, useEffect, useRef } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import axios from "axios";
-// import { useRouter } from "next/router";
 import { useRouter } from "next/navigation";
 
 // Define types for search results
-interface company {
+interface Company {
   sl_no: number;
   company: string;
   country: string;
@@ -15,45 +14,47 @@ interface company {
 }
 
 const SearchBar: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState<string>(""); // Search term
-  const [filteredResults, setFilteredResults] = useState<company[]>([]); // Search results
-  const searchRef = useRef();
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [filteredResults, setFilteredResults] = useState<Company[]>([]);
+  const searchRef = useRef<HTMLDivElement | null>(null); // Type the ref correctly
   const router = useRouter();
+
   // Handle search query input change
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
+
   const BASE_API = process.env.NEXT_PUBLIC_API;
-  // Handle search logic (for fetching API data)
+
   const handleSearch = async () => {
     try {
-      // You can replace this with your actual API endpoint
-    //   console.log(searchQuery);
       if (searchQuery.length < 1) {
         setFilteredResults([]);
         return;
       }
-      const response = await axios.get<company[]>(
+      const response = await axios.get<Company[]>(
         `${BASE_API}/api/company/search`,
         {
           params: { query: searchQuery },
         }
       );
-      setFilteredResults(response.data); // Set the API results to the state
-    //   console.log(filteredResults);
+      setFilteredResults(response.data);
     } catch (error) {
       console.error("Error fetching search results:", error);
     }
   };
+
   useEffect(() => {
     handleSearch();
   }, [searchQuery]);
+
   // Handle search when the user presses Enter
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       handleSearch(); // Trigger search when pressing "Enter"
     }
   };
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -73,8 +74,7 @@ const SearchBar: React.FC = () => {
     };
   }, []);
 
-  const handleResultClick = (result: company) => {
-    // console.log(result.sl_no);
+  const handleResultClick = (result: Company) => {
     const userId = localStorage.getItem("user_id");
     if (userId == null) router.push("/auth/login");
     else router.push(`/dashboard/${userId}/${result.sl_no}`);
@@ -85,7 +85,6 @@ const SearchBar: React.FC = () => {
       {/* Search Bar */}
       <div className="relative w-full max-w-2xl">
         <input
-          ref={searchRef}
           type="text"
           className="w-full p-4 pl-12 pr-12 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="Search companies"
@@ -105,16 +104,9 @@ const SearchBar: React.FC = () => {
           className="mt-4 w-full max-w-2xl bg-white shadow-lg rounded-lg p-4 z-10 h-64 overflow-y-auto"
         >
           <ul>
-            {filteredResults.map((result, index) => (
-              // <li key={index} className="border-b last:border-0 py-2">
-              //   <p className="font-semibold">{result.company}</p>
-              //   <p className="text-sm text-gray-500">
-              //     {result.country} • market cap{result.market_cap}
-              //   </p>
-              // </li>
-
+            {filteredResults.map((result) => (
               <li
-                key={index}
+                key={result.sl_no} // Use a unique identifier for the key
                 className="border-b last:border-0 py-2 cursor-pointer"
                 onClick={() => handleResultClick(result)}
               >

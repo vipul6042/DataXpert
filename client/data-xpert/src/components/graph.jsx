@@ -10,13 +10,10 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-
-
-
 const Chart = ({ data = [] }) => {
-  const formattedData = Object.keys(data).map(year => ({
-    year: year,       // year as string
-    price: data[year], // corresponding price
+  const formattedData = Object.keys(data).map((year) => ({
+    year: year,
+    price: data[year],
   }));
   return (
     <>

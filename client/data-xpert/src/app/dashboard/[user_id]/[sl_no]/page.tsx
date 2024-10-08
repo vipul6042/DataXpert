@@ -2,7 +2,6 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-// import Sidebar from "@/components/sidebar";
 import Navbar from "@/components/navbar";
 import Chart from "@/components/graph";
 import Card from "@/components/singlecard";
@@ -19,15 +18,23 @@ interface CompanyData {
   market_cap: number;
   diversity: string;
 }
-
+interface year{
+  2023:number,
+  2024:number,
+}
 interface Metrics {
   total_companies_in_country: number;
   greater_diversity_companies_in_country: number;
-  yearly_changes: object; // You can refine this based on your structure
+  yearly_changes: yearlyChanges;
   domestic_comparisons: object;
   global_comparisons: object;
 }
-
+interface yearlyChanges{
+  stock_price:year,
+  revenue:year,
+  expenses:year,
+  market_share:year,
+}
 interface ApiResponse {
   status: string;
   message: string;
@@ -40,8 +47,6 @@ const CompanyDashboard = () => {
 
   const [companyData, setCompanyData] = useState<CompanyData | null>(null);
   const [metrics, setMetrics] = useState<Metrics | null>(null);
-  const [status, setStatus] = useState<string | null>(null);
-  const [message, setMessage] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("yearlyChanges");
 
   const renderContent = () => {
@@ -49,7 +54,7 @@ const CompanyDashboard = () => {
       case "yearlyChanges":
         return (
           <div>
-            {metrics.yearly_changes && (
+            {metrics!==null && metrics.yearly_changes && (
               <>
                 <h3>Yearly Changes</h3>
                 <ul>
@@ -73,7 +78,7 @@ const CompanyDashboard = () => {
       case "domesticComparison":
         return (
           <div>
-            {metrics.domestic_comparisons && (
+            {metrics!==null && metrics.domestic_comparisons && (
               <>
                 <h3>Domestic Comparisons</h3>
                 <ul>
@@ -95,7 +100,7 @@ const CompanyDashboard = () => {
       case "globalComparison":
         return (
           <div>
-            {metrics.global_comparisons && (
+            {metrics!==null && metrics.global_comparisons && (
               <>
                 <h3>Global Comparisons</h3>
                 <ul>
@@ -139,8 +144,6 @@ const CompanyDashboard = () => {
 
           setCompanyData(data.company);
           setMetrics(data.metrics);
-          setStatus(data.status);
-          setMessage(data.message);
         } catch (error) {
           console.error(error);
           setCompanyData(null);
@@ -149,7 +152,7 @@ const CompanyDashboard = () => {
 
       fetchData();
     }
-  }, [sl_no]);
+  }, [sl_no,BASE_API,user_id]);
 
   return (
     <div>
