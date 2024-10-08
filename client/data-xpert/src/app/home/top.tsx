@@ -28,7 +28,7 @@ export const Top: React.FC<TopProps> = ({ prop }) => {
     } else if (amount > 1e6) {
       return "$" + (amount / 1e6).toFixed(2) + "M";
     }
-    return amount;
+    return amount+'';
   };
 
   const BASE_API = process.env.NEXT_PUBLIC_API;

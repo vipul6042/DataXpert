@@ -15,7 +15,7 @@ const HomeCard: React.FC<HomeCardProps> = ({
   logoUrl,
 }) => {
   const router = useRouter();
-  const handleResultClick = (sl_no) => {
+  const handleResultClick = (sl_no: number) => {
     const userId = localStorage.getItem("user_id");
     if (userId == null) router.push("/auth/login");
     else router.push(`/dashboard/${userId}/${sl_no}`);

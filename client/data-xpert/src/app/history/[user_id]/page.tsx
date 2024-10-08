@@ -71,7 +71,6 @@ const HistoryPage = () => {
                   key={index}
                   sl_no={item.sl_no}
                   title={item.company_detail.company}
-                  time={item.createdAt}
                   amount={item.company_detail.market_cap}
                   date={item.createdAt}
                   status={item.company_detail.country}
