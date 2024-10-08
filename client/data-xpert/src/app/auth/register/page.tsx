@@ -59,6 +59,8 @@ const Register = () => {
       } catch (error) {
         setServerErrorMessage("An error occurred. Please try again.");
         setLoading(false);
+		console.log(error);
+		
       }
     },
   });

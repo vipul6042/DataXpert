@@ -146,7 +146,7 @@ const CompanyDashboard = () => {
 
       fetchData();
     }
-  }, [sl_no]);
+  }, [sl_no,BASE_API,user_id]);
 
   return (
     <div>

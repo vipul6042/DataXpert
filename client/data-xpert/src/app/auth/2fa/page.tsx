@@ -38,7 +38,7 @@ const Enable2FA = () => {
 
   useEffect(() => {
     fetchQrCode();
-  }, []);
+  }, [fetchQrCode]);
   const handleInputChange = (e, index) => {
     const newCode = [...verificationCode];
     newCode[index] = e.target.value;
@@ -91,7 +91,7 @@ const Enable2FA = () => {
               )}
             </div>
             <div className="mt-2 text-sm text-gray-600">
-              If you can't scan the code, use this secret key in your app:
+              If you can&apos;t scan the code, use this secret key in your app:
               <div className="mt-2 bg-gray-100 p-2 border rounded-md">
                 {secretKey}
               </div>

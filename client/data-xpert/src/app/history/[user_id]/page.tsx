@@ -38,13 +38,14 @@ const HistoryPage = () => {
         }
       } catch (err) {
         setError("Failed to fetch user history.");
+        console.log(err);
       } finally {
         setLoading(false);
       }
     };
 
     fetchUserHistory();
-  }, [user_id]);
+  }, [user_id, BASE_API]);
 
   if (loading) {
     return <div>Loading user history...</div>;
@@ -65,8 +66,9 @@ const HistoryPage = () => {
             <p>No history found for this user.</p>
           ) : (
             <div className="flex flex-wrap gap-5">
-              {history.map((item) => (
+              {history.map((item, index) => (
                 <HistoryCard
+                  key={index}
                   sl_no={item.sl_no}
                   title={item.company_detail.company}
                   time={item.createdAt}

@@ -10,8 +10,8 @@ interface TopProps {
 export const Top: React.FC<TopProps> = ({ prop }) => {
   const [companies, setCompanies] = useState<any[]>([]);
 
-  const formattedMarketCap = (company) => {
-    var amount = company.revenue_2024;
+  const formattedMarketCap = (company:any) => {
+    let amount = company.revenue_2024;
     if (prop === "market_cap") amount = company.market_cap;
     else if (prop === "stock_price_2024") amount = company.stock_price_2024;
     else if (prop === "diversity") amount = company.diversity;

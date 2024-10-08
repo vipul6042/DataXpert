@@ -50,6 +50,7 @@ const Login = () => {
         setServerErrorMessage("Error logging in");
         setServerSuccessMessage("");
         setLoading(false);
+		console.log(error);
       }
     },
   });

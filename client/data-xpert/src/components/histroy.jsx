@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-const HistoryCard = ({ title, time, amount, date, status, user_Id, sl_no }) => {
+const HistoryCard = ({ title, amount, date, status, user_Id, sl_no }) => {
   const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
 
