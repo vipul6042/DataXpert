@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import Sidebar from "@/components/sidebar";
+// import Sidebar from "@/components/sidebar";
 import Navbar from "@/components/navbar";
 import HistoryCard from "@/components/histroy";
 
@@ -60,7 +60,7 @@ const HistoryPage = () => {
     <div>
       <Navbar />
       <div className="flex flex-row">
-        <Sidebar />
+        {/* <Sidebar /> */}
         <div className="flex-grow p-4 overflow-auto h-screen hide-scrollbar">
           <h1 className="text-xl font-bold">User History</h1>
           {history.length === 0 ? (

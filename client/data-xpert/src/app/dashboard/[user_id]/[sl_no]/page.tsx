@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import Sidebar from "@/components/sidebar";
+// import Sidebar from "@/components/sidebar";
 import Navbar from "@/components/navbar";
 import Chart from "@/components/graph";
 import Card from "@/components/singlecard";
@@ -155,7 +155,7 @@ const CompanyDashboard = () => {
     <div>
       <Navbar />
       <div className="flex flex-row">
-        <Sidebar />
+        {/* <Sidebar /> */}
         {!companyData ? (
           <p>Loading...</p>
         ) : (
@@ -202,17 +202,18 @@ const CompanyDashboard = () => {
             {metrics && (
               <>
                 <h2 className="text-3xl font-serif font-bold">Metrics</h2>
-                <Card
-                  IconComponent={MilitaryTechIcon}
-                  Item={"Companies in Country"}
-                  value={metrics.total_companies_in_country}
-                />
-                <Card
-                  IconComponent={MilitaryTechIcon}
-                  Item={"Diversity Rank(domestic)"}
-                  value={metrics.greater_diversity_companies_in_country}
-                />
-
+                <div className="flex">
+                  <Card
+                    IconComponent={MilitaryTechIcon}
+                    Item={"Companies in Country"}
+                    value={metrics.total_companies_in_country}
+                  />
+                  <Card
+                    IconComponent={MilitaryTechIcon}
+                    Item={"Diversity Rank(domestic)"}
+                    value={metrics.greater_diversity_companies_in_country}
+                  />
+                </div>
                 <div className="flex space-x-4 mb-4">
                   <button
                     className={`px-4 py-2 ${
