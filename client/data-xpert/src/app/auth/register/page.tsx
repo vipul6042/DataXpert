@@ -20,6 +20,8 @@ const Register = () => {
 	const [loading, setLoading] = useState(false);
 	const router = useRouter();
 
+	const BASE_API = process.env.NEXT_PUBLIC_API;
+
 	const { values, errors, handleChange, handleSubmit } = useFormik({
 		initialValues,
 		validationSchema: registerSchema,
@@ -27,7 +29,7 @@ const Register = () => {
 			setLoading(true);
 			try {
 				// Make the API call to the backend
-				const response = await fetch("http://localhost:4000/api/signup", {
+				const response = await fetch(`${BASE_API}/api/signup`, {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",

@@ -23,7 +23,7 @@ const SearchBar: React.FC = () => {
 	const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
 		setSearchQuery(event.target.value);
 	};
-
+  const BASE_API = process.env.NEXT_PUBLIC_API;
 	// Handle search logic (for fetching API data)
 	const handleSearch = async () => {
 		try {
@@ -33,12 +33,9 @@ const SearchBar: React.FC = () => {
 				setFilteredResults([]);
 				return;
 			}
-			const response = await axios.get<company[]>(
-				`http://localhost:4000/api/company/search`,
-				{
-					params: { query: searchQuery },
-				},
-			);
+			const response = await axios.get<company[]>(`${BASE_API}/api/company/search`, {
+				params: { query: searchQuery },
+			});
 			setFilteredResults(response.data); // Set the API results to the state
 			console.log(filteredResults);
 		} catch (error) {

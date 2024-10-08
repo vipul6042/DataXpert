@@ -16,14 +16,14 @@ const Login = () => {
 	const [serverSuccessMessage, setServerSuccessMessage] = useState("");
 	const [loading, setLoading] = useState(false);
 	const router = useRouter();
-
+  const BASE_API = process.env.NEXT_PUBLIC_API;
 	const { values, errors, handleChange, handleSubmit } = useFormik({
 		initialValues,
 		validationSchema: loginSchema,
 		onSubmit: async (values, action) => {
 			setLoading(true);
 			try {
-				const response = await fetch("http://localhost:4000/api/login", {
+				const response = await fetch(`${BASE_API}/api/login`, {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",

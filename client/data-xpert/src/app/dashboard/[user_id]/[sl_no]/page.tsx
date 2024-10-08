@@ -118,7 +118,7 @@ const CompanyDashboard = () => {
         return <div>Select a tab</div>;
     }
   };
-
+ const BASE_API = process.env.NEXT_PUBLIC_API;
   const formattedMarketCap = (amount: number) => {
     if (amount > 1e9) {
       return "$" + (amount / 1e9).toFixed(2) + "B"; // Formats to billion with 2 decimal places
@@ -130,8 +130,8 @@ const CompanyDashboard = () => {
       const fetchData = async () => {
         try {
           const response = await fetch(
-            `http://localhost:4000/api/compute-metrics?user_id=${user_id}&sl_no=${sl_no}`
-          );
+											`${BASE_API}/api/compute-metrics?user_id=${user_id}&sl_no=${sl_no}`,
+										);
           if (!response.ok) {
             throw new Error("Failed to fetch company data");
           }
@@ -152,108 +152,110 @@ const CompanyDashboard = () => {
   }, [sl_no]);
 
   return (
-    <div>
-      <Navbar />
-      <div className="flex flex-row">
-        {/* <Sidebar /> */}
-        {!companyData ? (
-          <p>Loading...</p>
-        ) : (
-          <div className="scroll-auto h-dvh overflow-auto w-dvw p-4">
-            <div className="flex flex-row">
-              <div className="flex flex-col">
-                <CompanyCard
-                  logourl={`https://ui-avatars.com/api/?name=${companyData.company}&size=200&background=random&color=random`}
-                  companyName={companyData.company}
-                  country={companyData.country}
-                />
-                <div className="flex flex-row">
-                  <Card
-                    IconComponent={PriceChangeIcon}
-                    Item={"Market Cap"}
-                    value={formattedMarketCap(companyData.market_cap)}
-                  />
-                  <Card
-                    IconComponent={Diversity3OutlinedIcon}
-                    Item={"Diversity"}
-                    value={companyData.diversity}
-                  />
-                </div>
-              </div>
-              <ConversionRateCard
-                stock={{
-                  2024: metrics?.yearly_changes?.stock_price?.[2024],
-                  2023: metrics?.yearly_changes?.stock_price?.[2023],
-                }}
-                expenses={{
-                  2024: metrics?.yearly_changes?.expenses?.[2024],
-                  2023: metrics?.yearly_changes?.expenses?.[2023],
-                }}
-                revenue={{
-                  2024: metrics?.yearly_changes?.revenue?.[2024],
-                  2023: metrics?.yearly_changes?.revenue?.[2023],
-                }}
-                marketShare={{
-                  2024: metrics?.yearly_changes?.market_share?.[2024],
-                  2023: metrics?.yearly_changes?.market_share?.[2023],
-                }}
-              />
-            </div>
-            {metrics && (
-              <>
-                <h2 className="text-3xl font-serif font-bold">Metrics</h2>
-                <div className="flex">
-                  <Card
-                    IconComponent={MilitaryTechIcon}
-                    Item={"Companies in Country"}
-                    value={metrics.total_companies_in_country}
-                  />
-                  <Card
-                    IconComponent={MilitaryTechIcon}
-                    Item={"Diversity Rank(domestic)"}
-                    value={metrics.greater_diversity_companies_in_country}
-                  />
-                </div>
-                <div className="flex space-x-4 mb-4">
-                  <button
-                    className={`px-4 py-2 ${
-                      activeTab === "yearlyChanges"
-                        ? "bg-blue-500 text-white"
-                        : "bg-gray-200 text-black"
-                    }`}
-                    onClick={() => setActiveTab("yearlyChanges")}
-                  >
-                    Yearly Changes
-                  </button>
-                  <button
-                    className={`px-4 py-2 ${
-                      activeTab === "domesticComparison"
-                        ? "bg-blue-500 text-white"
-                        : "bg-gray-200 text-black"
-                    }`}
-                    onClick={() => setActiveTab("domesticComparison")}
-                  >
-                    Domestic Comparison
-                  </button>
-                  <button
-                    className={`px-4 py-2 ${
-                      activeTab === "globalComparison"
-                        ? "bg-blue-500 text-white"
-                        : "bg-gray-200 text-black"
-                    }`}
-                    onClick={() => setActiveTab("globalComparison")}
-                  >
-                    Global Comparison
-                  </button>
-                </div>
-                <div className="p-4 border rounded-lg">{renderContent()}</div>
-              </>
-            )}
-          </div>
-        )}
-      </div>
-    </div>
-  );
+			<div>
+				<Navbar />
+				<div className="flex flex-row">
+					{/* <Sidebar /> */}
+					{!companyData ? (
+						<p className="h-screen w-full flex justify-center items-center text-[30px]">
+							We are cooking the computation result, wait for atleast 2 minutes.
+						</p>
+					) : (
+						<div className="scroll-auto h-dvh overflow-auto w-dvw p-4">
+							<div className="flex flex-row">
+								<div className="flex flex-col">
+									<CompanyCard
+										logourl={`https://ui-avatars.com/api/?name=${companyData.company}&size=200&background=random&color=random`}
+										companyName={companyData.company}
+										country={companyData.country}
+									/>
+									<div className="flex flex-row">
+										<Card
+											IconComponent={PriceChangeIcon}
+											Item={"Market Cap"}
+											value={formattedMarketCap(companyData.market_cap)}
+										/>
+										<Card
+											IconComponent={Diversity3OutlinedIcon}
+											Item={"Diversity"}
+											value={companyData.diversity}
+										/>
+									</div>
+								</div>
+								<ConversionRateCard
+									stock={{
+										2024: metrics?.yearly_changes?.stock_price?.[2024],
+										2023: metrics?.yearly_changes?.stock_price?.[2023],
+									}}
+									expenses={{
+										2024: metrics?.yearly_changes?.expenses?.[2024],
+										2023: metrics?.yearly_changes?.expenses?.[2023],
+									}}
+									revenue={{
+										2024: metrics?.yearly_changes?.revenue?.[2024],
+										2023: metrics?.yearly_changes?.revenue?.[2023],
+									}}
+									marketShare={{
+										2024: metrics?.yearly_changes?.market_share?.[2024],
+										2023: metrics?.yearly_changes?.market_share?.[2023],
+									}}
+								/>
+							</div>
+							{metrics && (
+								<>
+									<h2 className="text-3xl font-serif font-bold">Metrics</h2>
+									<div className="flex">
+										<Card
+											IconComponent={MilitaryTechIcon}
+											Item={"Companies in Country"}
+											value={metrics.total_companies_in_country}
+										/>
+										<Card
+											IconComponent={MilitaryTechIcon}
+											Item={"Diversity Rank(domestic)"}
+											value={metrics.greater_diversity_companies_in_country}
+										/>
+									</div>
+									<div className="flex space-x-4 mb-4">
+										<button
+											className={`px-4 py-2 ${
+												activeTab === "yearlyChanges"
+													? "bg-blue-500 text-white"
+													: "bg-gray-200 text-black"
+											}`}
+											onClick={() => setActiveTab("yearlyChanges")}
+										>
+											Yearly Changes
+										</button>
+										<button
+											className={`px-4 py-2 ${
+												activeTab === "domesticComparison"
+													? "bg-blue-500 text-white"
+													: "bg-gray-200 text-black"
+											}`}
+											onClick={() => setActiveTab("domesticComparison")}
+										>
+											Domestic Comparison
+										</button>
+										<button
+											className={`px-4 py-2 ${
+												activeTab === "globalComparison"
+													? "bg-blue-500 text-white"
+													: "bg-gray-200 text-black"
+											}`}
+											onClick={() => setActiveTab("globalComparison")}
+										>
+											Global Comparison
+										</button>
+									</div>
+									<div className="p-4 border rounded-lg">{renderContent()}</div>
+								</>
+							)}
+						</div>
+					)}
+				</div>
+			</div>
+		);
 };
 
 export default CompanyDashboard;
