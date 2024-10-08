@@ -2,10 +2,12 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 
 const Enable2FA = () => {
-	const [qrCode, setQrCode] = useState(""); // Update with actual QR code path
-	const [secretKey, setSecretKey] = useState("NJ1& JKHUI LD21 NF42"); // Replace with dynamic secret key
+	const [qrCode, setQrCode] = useState("");
+	const [secretKey, setSecretKey] = useState("NJ1& JKHUI LD21 NF42");
 	const [verificationCode, setVerificationCode] = useState([
 		"",
 		"",
@@ -14,6 +16,8 @@ const Enable2FA = () => {
 		"",
 		"",
 	]);
+
+	const router = useRouter();
 
 	const fetchQrCode = async () => {
 		try {
@@ -27,8 +31,8 @@ const Enable2FA = () => {
 
 			const data = await response.json();
 			if (response.ok) {
-				setQrCode(data.qrCode); // Set QR code image URL from response
-				setSecretKey(data.secret); // Store the secret if needed for later
+				setQrCode(data.qrCode);
+				setSecretKey(data.secret);
 			} else {
 				console.error("Error enabling 2FA:", data.error);
 			}
@@ -37,11 +41,9 @@ const Enable2FA = () => {
 		}
 	};
 
-	// Call the function when the component loads
 	useEffect(() => {
 		fetchQrCode();
-	}, []); // Empty dependency to trigger only on mount
-
+	}, []);
 	const handleInputChange = (e, index) => {
 		const newCode = [...verificationCode];
 		newCode[index] = e.target.value;
@@ -49,7 +51,6 @@ const Enable2FA = () => {
 	};
 
 	const handleSubmit = async () => {
-		// Logic to verify 2FA goes here
 		console.log("Entered verification code:", verificationCode.join(""));
 	};
 
@@ -121,14 +122,14 @@ const Enable2FA = () => {
 
 				<div className="flex justify-between mt-6">
 					<button
-						onClick={() => console.log("Cancel 2FA setup")}
+						onClick={() => router.push("/")}
 						className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-md"
 					>
 						Cancel
 					</button>
 					<button
 						onClick={handleSubmit}
-						className="bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-4 rounded-md"
+						className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md"
 					>
 						Verify now
 					</button>

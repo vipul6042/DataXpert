@@ -62,8 +62,8 @@ const Register = () => {
 	});
 
 	return (
-		<div className="flex items-center  h-screen bg-gray-100">
-			<div className="w-full max-w-md p-8 h-screen bg-white rounded-lg shadow-lg">
+		<div className="flex items-center  h-screen bg-white-100">
+			<div className="w-full max-w-md p-8  bg-white rounded-lg ">
 				<h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
 				<form onSubmit={handleSubmit}>
 					<div className="mb-4">
@@ -130,7 +130,7 @@ const Register = () => {
 							name="password_confirmation"
 							value={values.password_confirmation}
 							onChange={handleChange}
-							className="w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-2"
+							className="w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 p-2"
 							placeholder="Confirm your password"
 						/>
 						{errors.password_confirmation && (
@@ -151,7 +151,7 @@ const Register = () => {
 					Already an User?{" "}
 					<Link
 						href="/auth/login"
-						className="text-indigo-500 hover:text-indigo-600 transition duration-300 ease-in-out"
+						className="text-blue-500 hover:text-blue-600 transition duration-300 ease-in-out"
 					>
 						Login
 					</Link>

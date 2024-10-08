@@ -4,6 +4,7 @@ import { useFormik } from "formik";
 import { loginSchema } from "@/validation/schemas";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Image from "next/image";
 
 const initialValues = {
 	email: "",
@@ -54,8 +55,8 @@ const Login = () => {
 	});
 
 	return (
-		<div className="flex items-center  h-screen bg-gray-100">
-			<div className="w-full max-w-md p-8 h-screen bg-white rounded-lg shadow-lg">
+		<div className="flex items-center  h-screen bg-white-100">
+			<div className="w-full max-w-md p-8  bg-white rounded-lg  ">
 				<h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
 				<form onSubmit={handleSubmit}>
 					<div className="mb-4">
@@ -95,14 +96,14 @@ const Login = () => {
 					<p className="text-sm text-gray-600 p-1">
 						<Link
 							href="/account/reset-password-link"
-							className="text-indigo-500 hover:text-indigo-600 transition duration-300 ease-in-out"
+							className="text-blue-500 hover:text-blue-600 transition duration-300 ease-in-out"
 						>
 							Forgot Password?
 						</Link>
 					</p>
 					<button
 						type="submit"
-						className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring focus:ring-indigo-200 focus:ring-opacity-50 disabled:bg-gray-400"
+						className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring focus:ring-indigo-200 focus:ring-opacity-50 disabled:bg-gray-400"
 						disabled={loading}
 					>
 						{loading ? "Logging in..." : "Login"}
@@ -112,7 +113,7 @@ const Login = () => {
 					Not a User?{" "}
 					<Link
 						href="/auth/register"
-						className="text-indigo-500 hover:text-indigo-600 transition duration-300 ease-in-out"
+						className="text-blue-500 hover:text-blue-600 transition duration-300 ease-in-out"
 					>
 						Create an account
 					</Link>
@@ -127,6 +128,14 @@ const Login = () => {
 						{serverErrorMessage}
 					</div>
 				)}
+			</div>
+			<div className="h-screen flex justify-center items-center w-full bg-blue-100">
+				<Image
+					src="/authBanner.png"
+					alt="auth banner"
+					height={700}
+					width={700}
+				/>
 			</div>
 		</div>
 	);
