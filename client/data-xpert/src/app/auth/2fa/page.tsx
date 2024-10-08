@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -39,7 +39,7 @@ const Enable2FA = () => {
   useEffect(() => {
     fetchQrCode();
   }, [fetchQrCode]);
-  const handleInputChange = (e, index) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
     const newCode = [...verificationCode];
     newCode[index] = e.target.value;
     setVerificationCode(newCode);
