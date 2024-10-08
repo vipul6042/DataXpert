@@ -15,7 +15,7 @@ const CompanyCard = ({ logourl, companyName, country }) => {
   const flagUrl = `https://flagcdn.com/w40/${countryCode}.png`;
 
   return (
-    <div className="bg-white rounded-xl shadow-lg  p-6 text-center w-fit">
+    <div className="bg-white rounded-xl shadow-lg m-4 p-6 text-center w-fit">
       <div className="flex flex-row items-center justify-center gap-4">
         <img
           src={logourl}
