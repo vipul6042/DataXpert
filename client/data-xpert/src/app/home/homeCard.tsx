@@ -15,17 +15,20 @@ const HomeCard: React.FC<HomeCardProps> = ({
   logoUrl,
 }) => {
   // const isNegative = change < 0;
-console.log(price);
+// console.log(price);
 const router = useRouter();
 const handleResultClick = (sl_no) => {
-  console.log(sl_no);
+  // console.log(sl_no);
   const userId = localStorage.getItem("user_id");
-  router.push(`/dashboard/${userId}/${sl_no}`);
+  // console.log(userId);
+  if(userId==null)router.push("/auth/login")
+  else router.push(`/dashboard/${userId}/${sl_no}`);
 };
 
   return (
     <div onClick={() => handleResultClick(change)} className="border rounded-lg  w-40 text-center shadow-md m-5">
       <CardActionArea className="p-4">
+        <div className="pt-6 pb-3">
         <div className="mb-2">
           <img
             src={logoUrl}
@@ -40,6 +43,7 @@ const handleResultClick = (sl_no) => {
         >
           {/* {isNegative ? "" : "+"} */}
           {/* {change} */}
+        </div>
         </div>
       </CardActionArea>
     </div>
