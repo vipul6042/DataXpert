@@ -9,8 +9,9 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const user = localStorage.getItem("user_id");
+//   const user_id=localStorage.getItem("user_id")
   useEffect(() => {
+    const user = localStorage.getItem("user_id");
     if (user) {
       setIsLoggedIn(true);
     }
@@ -38,7 +39,7 @@ const Navbar = () => {
             </a>
             {isLoggedIn ? (
               <a
-                href={`/history/${user}`}
+                href={`/history/${localStorage.getItem("user_id")}`}
                 className="text-gray-700 hover:text-blue-500"
               >
                 History
