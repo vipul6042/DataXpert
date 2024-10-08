@@ -3,6 +3,7 @@ import HomeMain from "./home/homeMain";
 import SearchBar from "@/components/searchbar";
 import HeroSection from "@/components/herosection";
 import { Top } from "./home/top";
+import "dotenv/config";
 // const handleSearch = (e: any): void => {
 //     console.log(e);
 // };

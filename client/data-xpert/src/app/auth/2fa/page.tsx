@@ -18,10 +18,10 @@ const Enable2FA = () => {
 	]);
 
 	const router = useRouter();
-
+const BASE_API = process.env.NEXT_PUBLIC_API;
 	const fetchQrCode = async () => {
 		try {
-			const response = await fetch("http://localhost:4000/api/enable-2fa", {
+			const response = await fetch(`${BASE_API}+/api/enable-2fa`, {
 				method: "GET",
 				// headers: {
 				// 	"Content-Type": "application/json",
